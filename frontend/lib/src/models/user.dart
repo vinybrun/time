@@ -1,3 +1,5 @@
+import 'category.dart';
+
 class AppUser {
   AppUser({
     required this.id,
@@ -6,6 +8,7 @@ class AppUser {
     required this.emailVerified,
     required this.timezone,
     required this.language,
+    this.categories,
   });
 
   final int id;
@@ -14,12 +17,14 @@ class AppUser {
   final bool emailVerified;
   final String timezone;
   final String language;
+  final List<CategoryDef>? categories;
 
   AppUser copyWith({
     String? name,
     bool? emailVerified,
     String? timezone,
     String? language,
+    List<CategoryDef>? categories,
   }) =>
       AppUser(
         id: id,
@@ -28,6 +33,7 @@ class AppUser {
         emailVerified: emailVerified ?? this.emailVerified,
         timezone: timezone ?? this.timezone,
         language: language ?? this.language,
+        categories: categories ?? this.categories,
       );
 
   Map<String, dynamic> toJson() => {
@@ -37,6 +43,8 @@ class AppUser {
         'email_verified': emailVerified,
         'timezone': timezone,
         'language': language,
+        if (categories != null)
+          'categories': categories!.map((c) => c.toJson()).toList(),
       };
 
   factory AppUser.fromJson(Map<String, dynamic> j) => AppUser(
@@ -46,5 +54,8 @@ class AppUser {
         emailVerified: (j['email_verified'] ?? false) as bool,
         timezone: (j['timezone'] ?? 'UTC') as String,
         language: (j['language'] ?? 'en') as String,
+        categories: (j['categories'] as List?)
+            ?.map((e) => CategoryDef.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 }

@@ -93,3 +93,40 @@ def test_update_settings(client):
     assert body["timezone"] == "America/Sao_Paulo"
     assert body["language"] == "pt"
     assert body["name"] == "Viny"
+
+
+def test_update_and_read_categories(client):
+    data = register_and_verify(client, email="cats@e.com")
+    h = {"Authorization": f"Bearer {data['access_token']}"}
+    cats = [
+        {"key": "work", "label": "Job", "color": 4283215532, "native": True, "enabled": False, "order": 0},
+        {"key": "custom_yoga", "label": "Yoga", "color": 4287609480, "native": False, "enabled": True, "order": 1},
+    ]
+    r = client.patch("/api/v1/me", json={"categories": cats}, headers=h)
+    assert r.status_code == 200, r.text
+    got = client.get("/api/v1/me", headers=h).json()["categories"]
+    assert len(got) == 2
+    assert got[0]["label"] == "Job" and got[0]["enabled"] is False
+    assert got[1]["key"] == "custom_yoga"
+
+
+def test_export_data(client):
+    data = register_and_verify(client, email="exp@e.com")
+    h = {"Authorization": f"Bearer {data['access_token']}"}
+    client.post("/api/v1/entries", json={"client_id": "e1", "day": "2026-06-25", "category": "work", "start_min": 0, "end_min": 60}, headers=h)
+    r = client.get("/api/v1/me/export", headers=h)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["user"]["email"] == "exp@e.com"
+    assert len(body["entries"]) == 1
+
+
+def test_delete_account(client):
+    data = register_and_verify(client, email="del@e.com")
+    h = {"Authorization": f"Bearer {data['access_token']}"}
+    client.post("/api/v1/entries", json={"client_id": "e1", "day": "2026-06-25", "category": "work", "start_min": 0, "end_min": 60}, headers=h)
+    assert client.delete("/api/v1/me", headers=h).status_code == 204
+    # Token now references a missing user -> unauthorized.
+    assert client.get("/api/v1/me", headers=h).status_code == 401
+    # Re-registering the same email works (account is gone).
+    assert client.post("/api/v1/auth/register", json={"email": "del@e.com", "password": "password12", "name": "D"}).status_code == 201

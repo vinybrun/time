@@ -224,4 +224,49 @@ class AppL10nDe extends AppL10n {
 
   @override
   String get backToSignIn => 'Zurück zur Anmeldung';
+
+  @override
+  String get categories => 'Kategorien';
+
+  @override
+  String get addCategory => 'Kategorie hinzufügen';
+
+  @override
+  String get categoryName => 'Kategoriename';
+
+  @override
+  String get color => 'Farbe';
+
+  @override
+  String get rename => 'Umbenennen';
+
+  @override
+  String get yourData => 'Deine Daten';
+
+  @override
+  String get exportData => 'Meine Daten exportieren';
+
+  @override
+  String get exportedDownload => 'Daten heruntergeladen.';
+
+  @override
+  String get exportedClipboard =>
+      'Deine Daten wurden in die Zwischenablage kopiert.';
+
+  @override
+  String get deleteAccount => 'Konto löschen';
+
+  @override
+  String get deleteAccountWarn =>
+      'Dies löscht dein Konto und alle deine Zeitdaten dauerhaft. Kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get deleteForever => 'Endgültig löschen';
+
+  @override
+  String get resetToDefaults => 'Auf Standard zurücksetzen';
+
+  @override
+  String get manageCategoriesHint =>
+      'Benenne um, färbe um, blende aus oder füge eigene Bereiche hinzu.';
 }

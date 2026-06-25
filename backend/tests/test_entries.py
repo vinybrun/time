@@ -36,9 +36,15 @@ def test_upsert_is_idempotent_by_client_id(client):
     assert rows[0]["end_min"] == 500
 
 
-def test_invalid_category_rejected(client):
+def test_custom_category_key_allowed(client):
     h = auth_header(client)
-    r = client.post("/api/v1/entries", json={"client_id": "c", "day": "2026-06-25", "category": "nope", "start_min": 0, "end_min": 10}, headers=h)
+    r = client.post("/api/v1/entries", json={"client_id": "c", "day": "2026-06-25", "category": "custom_yoga", "start_min": 0, "end_min": 10}, headers=h)
+    assert r.status_code == 200, r.text
+
+
+def test_invalid_category_key_rejected(client):
+    h = auth_header(client)
+    r = client.post("/api/v1/entries", json={"client_id": "c", "day": "2026-06-25", "category": "Bad Key!", "start_min": 0, "end_min": 10}, headers=h)
     assert r.status_code == 422
 
 

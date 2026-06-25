@@ -46,11 +46,11 @@ class EntriesNotifier extends ChangeNotifier {
     return null;
   }
 
-  /// Live current focus category for [day] (only meaningful for today).
-  TimeCategory? currentFocus(String day) => runningEntry(day)?.category;
+  /// Live current focus category key for [day] (only meaningful for today).
+  String? currentFocus(String day) => runningEntry(day)?.category;
 
-  Map<TimeCategory, int> sumByCategory(String day, int nowMin) {
-    final map = <TimeCategory, int>{};
+  Map<String, int> sumByCategory(String day, int nowMin) {
+    final map = <String, int>{};
     for (final e in forDay(day)) {
       final dur = e.durationMin(nowMin);
       if (dur <= 0) continue;
@@ -71,19 +71,19 @@ class EntriesNotifier extends ChangeNotifier {
 
   /// Switch the live focus to [category] now. Closes the running entry and
   /// opens a new one. Matches "press a button -> new time entry".
-  void setFocus(TimeCategory category) {
+  void setFocus(String categoryKey) {
     final now = DateTime.now();
     final day = dayString(now);
     final nowMin = minutesOfDay(now);
     normalizeForToday();
 
     final running = runningEntry(day);
-    if (running != null && running.category == category) return; // no-op
+    if (running != null && running.category == categoryKey) return; // no-op
 
     if (running != null) {
       if (nowMin <= running.startMin) {
         // Same minute: just relabel the running entry, no zero-length segment.
-        _replace(running.copyWith(category: category));
+        _replace(running.copyWith(category: categoryKey));
         _afterMutation();
         return;
       }
@@ -92,19 +92,19 @@ class EntriesNotifier extends ChangeNotifier {
     _entries.add(TimeEntry(
       clientId: _newId(),
       day: day,
-      category: category,
-      startMin: running == null ? nowMin : nowMin,
+      category: categoryKey,
+      startMin: nowMin,
       endMin: null,
     ));
     _afterMutation();
   }
 
   /// Manually add a historical entry (from the "change history" form).
-  void addManual(String day, TimeCategory category, int startMin, int endMin) {
+  void addManual(String day, String categoryKey, int startMin, int endMin) {
     _entries.add(TimeEntry(
       clientId: _newId(),
       day: day,
-      category: category,
+      category: categoryKey,
       startMin: startMin,
       endMin: endMin,
     ));
@@ -112,7 +112,7 @@ class EntriesNotifier extends ChangeNotifier {
   }
 
   void updateEntry(String clientId,
-      {TimeCategory? category, int? startMin, int? endMin}) {
+      {String? category, int? startMin, int? endMin, bool push = true}) {
     final idx = _entries.indexWhere((e) => e.clientId == clientId);
     if (idx < 0) return;
     final e = _entries[idx];
@@ -121,7 +121,37 @@ class EntriesNotifier extends ChangeNotifier {
     _entries[idx] = endMin == null
         ? e.copyWith(category: category, startMin: startMin)
         : e.copyWith(category: category, startMin: startMin, endMin: endMin);
-    _afterMutation();
+    _afterMutation(push: push);
+  }
+
+  /// Find the contiguous handoff entry-pair where [aKey] hands off to [bKey]
+  /// (a-entry ends exactly where a b-entry starts). Returns their client ids
+  /// and the shared boundary minute, or null if there's no clean handoff.
+  ({String aId, String bId, int boundary, int minB, int maxB})? handoff(
+      String day, String aKey, String bKey, int nowMin) {
+    final list = forDay(day);
+    for (final a in list) {
+      if (a.category != aKey || a.isRunning) continue;
+      for (final b in list) {
+        if (b.category != bKey) continue;
+        if (b.startMin == a.endMin) {
+          final maxB = (b.endMin ?? nowMin) - 1;
+          return (
+            aId: a.clientId,
+            bId: b.clientId,
+            boundary: a.endMin!,
+            minB: a.startMin + 1,
+            maxB: maxB,
+          );
+        }
+      }
+    }
+    return null;
+  }
+
+  void moveHandoff(String aId, String bId, int newBoundary, {bool push = true}) {
+    updateEntry(aId, endMin: newBoundary, push: false);
+    updateEntry(bId, startMin: newBoundary, push: push);
   }
 
   void deleteEntry(String clientId) {
@@ -152,7 +182,7 @@ class EntriesNotifier extends ChangeNotifier {
       _entries.add(TimeEntry(
         clientId: _newId(),
         day: today,
-        category: TimeCategory.sleep,
+        category: kDefaultCategoryKey,
         startMin: 0,
         endMin: null,
       ));
@@ -173,10 +203,10 @@ class EntriesNotifier extends ChangeNotifier {
     if (idx >= 0) _entries[idx] = updated;
   }
 
-  void _afterMutation() {
+  void _afterMutation({bool push = true}) {
     _persist();
     notifyListeners();
-    unawaited(pushSync());
+    if (push) unawaited(pushSync());
   }
 
   void _persist() {
@@ -221,7 +251,7 @@ class EntriesNotifier extends ChangeNotifier {
       _entries.add(TimeEntry(
         clientId: _newId(),
         day: today,
-        category: TimeCategory.sleep,
+        category: kDefaultCategoryKey,
         startMin: 0,
         endMin: null,
       ));

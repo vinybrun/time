@@ -67,5 +67,19 @@
   "sendResetCode": "Enviar código",
   "resetCodeHint": "Digite o código enviado para {email} e escolha uma nova senha.",
   "doReset": "Redefinir senha",
-  "backToSignIn": "Voltar para entrar"
+  "backToSignIn": "Voltar para entrar",
+  "categories": "Categorias",
+  "addCategory": "Adicionar categoria",
+  "categoryName": "Nome da categoria",
+  "color": "Cor",
+  "rename": "Renomear",
+  "yourData": "Seus dados",
+  "exportData": "Exportar meus dados",
+  "exportedDownload": "Seus dados foram baixados.",
+  "exportedClipboard": "Seus dados foram copiados para a área de transferência.",
+  "deleteAccount": "Excluir conta",
+  "deleteAccountWarn": "Isto exclui permanentemente sua conta e todos os seus dados de tempo. Não pode ser desfeito.",
+  "deleteForever": "Excluir para sempre",
+  "resetToDefaults": "Restaurar padrões",
+  "manageCategoriesHint": "Renomeie, recolora, oculte ou adicione suas próprias áreas."
 }

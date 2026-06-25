@@ -221,4 +221,48 @@ class AppL10nEs extends AppL10n {
 
   @override
   String get backToSignIn => 'Volver a iniciar sesión';
+
+  @override
+  String get categories => 'Categorías';
+
+  @override
+  String get addCategory => 'Añadir categoría';
+
+  @override
+  String get categoryName => 'Nombre de la categoría';
+
+  @override
+  String get color => 'Color';
+
+  @override
+  String get rename => 'Renombrar';
+
+  @override
+  String get yourData => 'Tus datos';
+
+  @override
+  String get exportData => 'Exportar mis datos';
+
+  @override
+  String get exportedDownload => 'Datos descargados.';
+
+  @override
+  String get exportedClipboard => 'Tus datos se copiaron al portapapeles.';
+
+  @override
+  String get deleteAccount => 'Eliminar cuenta';
+
+  @override
+  String get deleteAccountWarn =>
+      'Esto elimina permanentemente tu cuenta y todos tus datos de tiempo. No se puede deshacer.';
+
+  @override
+  String get deleteForever => 'Eliminar para siempre';
+
+  @override
+  String get resetToDefaults => 'Restablecer valores';
+
+  @override
+  String get manageCategoriesHint =>
+      'Renombra, recolorea, oculta o añade tus propias áreas.';
 }

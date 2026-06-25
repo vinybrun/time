@@ -218,4 +218,48 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get backToSignIn => 'Back to sign in';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get addCategory => 'Add category';
+
+  @override
+  String get categoryName => 'Category name';
+
+  @override
+  String get color => 'Color';
+
+  @override
+  String get rename => 'Rename';
+
+  @override
+  String get yourData => 'Your data';
+
+  @override
+  String get exportData => 'Export my data';
+
+  @override
+  String get exportedDownload => 'Downloaded your data.';
+
+  @override
+  String get exportedClipboard => 'Your data was copied to the clipboard.';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountWarn =>
+      'This permanently deletes your account and all your time data. This cannot be undone.';
+
+  @override
+  String get deleteForever => 'Delete forever';
+
+  @override
+  String get resetToDefaults => 'Reset to defaults';
+
+  @override
+  String get manageCategoriesHint =>
+      'Rename, recolor, hide, or add your own areas.';
 }

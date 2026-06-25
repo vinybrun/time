@@ -221,4 +221,49 @@ class AppL10nPt extends AppL10n {
 
   @override
   String get backToSignIn => 'Voltar para entrar';
+
+  @override
+  String get categories => 'Categorias';
+
+  @override
+  String get addCategory => 'Adicionar categoria';
+
+  @override
+  String get categoryName => 'Nome da categoria';
+
+  @override
+  String get color => 'Cor';
+
+  @override
+  String get rename => 'Renomear';
+
+  @override
+  String get yourData => 'Seus dados';
+
+  @override
+  String get exportData => 'Exportar meus dados';
+
+  @override
+  String get exportedDownload => 'Seus dados foram baixados.';
+
+  @override
+  String get exportedClipboard =>
+      'Seus dados foram copiados para a área de transferência.';
+
+  @override
+  String get deleteAccount => 'Excluir conta';
+
+  @override
+  String get deleteAccountWarn =>
+      'Isto exclui permanentemente sua conta e todos os seus dados de tempo. Não pode ser desfeito.';
+
+  @override
+  String get deleteForever => 'Excluir para sempre';
+
+  @override
+  String get resetToDefaults => 'Restaurar padrões';
+
+  @override
+  String get manageCategoriesHint =>
+      'Renomeie, recolora, oculte ou adicione suas próprias áreas.';
 }

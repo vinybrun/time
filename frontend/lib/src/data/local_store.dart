@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/category.dart';
 import '../models/entry.dart';
 import '../models/user.dart';
 
@@ -16,6 +17,7 @@ class LocalStore {
   static const _kEntries = 'entries_cache';
   static const _kPendingDeletes = 'pending_deletes';
   static const _kLocaleOverride = 'locale_override';
+  static const _kCategories = 'categories';
 
   static Future<LocalStore> create() async =>
       LocalStore(await SharedPreferences.getInstance());
@@ -86,10 +88,29 @@ class LocalStore {
     }
   }
 
+  // Category config
+  List<CategoryDef>? get categories {
+    final s = _prefs.getString(_kCategories);
+    if (s == null) return null;
+    try {
+      return (jsonDecode(s) as List)
+          .map((e) => CategoryDef.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setCategories(List<CategoryDef> cats) async {
+    await _prefs.setString(
+        _kCategories, jsonEncode(cats.map((c) => c.toJson()).toList()));
+  }
+
   Future<void> clearSession() async {
     await _prefs.remove(_kToken);
     await _prefs.remove(_kUser);
     await _prefs.remove(_kEntries);
     await _prefs.remove(_kPendingDeletes);
+    await _prefs.remove(_kCategories);
   }
 }

@@ -67,5 +67,19 @@
   "sendResetCode": "Envoyer le code",
   "resetCodeHint": "Saisis le code envoyé à {email} et choisis un nouveau mot de passe.",
   "doReset": "Réinitialiser",
-  "backToSignIn": "Retour à la connexion"
+  "backToSignIn": "Retour à la connexion",
+  "categories": "Catégories",
+  "addCategory": "Ajouter une catégorie",
+  "categoryName": "Nom de la catégorie",
+  "color": "Couleur",
+  "rename": "Renommer",
+  "yourData": "Tes données",
+  "exportData": "Exporter mes données",
+  "exportedDownload": "Données téléchargées.",
+  "exportedClipboard": "Tes données ont été copiées dans le presse-papiers.",
+  "deleteAccount": "Supprimer le compte",
+  "deleteAccountWarn": "Ceci supprime définitivement ton compte et toutes tes données de temps. Action irréversible.",
+  "deleteForever": "Supprimer définitivement",
+  "resetToDefaults": "Réinitialiser",
+  "manageCategoriesHint": "Renomme, recolorie, masque ou ajoute tes propres domaines."
 }

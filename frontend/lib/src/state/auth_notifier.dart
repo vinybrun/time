@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../data/api_client.dart';
 import '../data/local_store.dart';
+import '../models/category.dart';
 import '../models/user.dart';
 
 enum AuthStatus { unknown, unauthenticated, needsVerification, authenticated }
@@ -96,13 +97,30 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   Future<void> updateSettings(
-      {String? name, String? timezone, String? language}) async {
+      {String? name,
+      String? timezone,
+      String? language,
+      List<CategoryDef>? categories}) async {
     if (_token == null) return;
     final updated = await _api.updateMe(_token!,
-        name: name, timezone: timezone, language: language);
+        name: name,
+        timezone: timezone,
+        language: language,
+        categories: categories);
     _user = updated;
     await _store.setUser(updated);
     notifyListeners();
+  }
+
+  Future<Map<String, dynamic>> exportData() async {
+    if (_token == null) return {};
+    return _api.exportData(_token!);
+  }
+
+  Future<void> deleteAccount() async {
+    if (_token == null) return;
+    await _api.deleteAccount(_token!);
+    await logout();
   }
 
   Future<void> changePassword(String current, String next) async {

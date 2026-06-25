@@ -223,4 +223,49 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get backToSignIn => 'Retour à la connexion';
+
+  @override
+  String get categories => 'Catégories';
+
+  @override
+  String get addCategory => 'Ajouter une catégorie';
+
+  @override
+  String get categoryName => 'Nom de la catégorie';
+
+  @override
+  String get color => 'Couleur';
+
+  @override
+  String get rename => 'Renommer';
+
+  @override
+  String get yourData => 'Tes données';
+
+  @override
+  String get exportData => 'Exporter mes données';
+
+  @override
+  String get exportedDownload => 'Données téléchargées.';
+
+  @override
+  String get exportedClipboard =>
+      'Tes données ont été copiées dans le presse-papiers.';
+
+  @override
+  String get deleteAccount => 'Supprimer le compte';
+
+  @override
+  String get deleteAccountWarn =>
+      'Ceci supprime définitivement ton compte et toutes tes données de temps. Action irréversible.';
+
+  @override
+  String get deleteForever => 'Supprimer définitivement';
+
+  @override
+  String get resetToDefaults => 'Réinitialiser';
+
+  @override
+  String get manageCategoriesHint =>
+      'Renomme, recolorie, masque ou ajoute tes propres domaines.';
 }

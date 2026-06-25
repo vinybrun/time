@@ -510,6 +510,90 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Back to sign in'**
   String get backToSignIn;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @addCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add category'**
+  String get addCategory;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name'**
+  String get categoryName;
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color;
+
+  /// No description provided for @rename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get rename;
+
+  /// No description provided for @yourData.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get yourData;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export my data'**
+  String get exportData;
+
+  /// No description provided for @exportedDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded your data.'**
+  String get exportedDownload;
+
+  /// No description provided for @exportedClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data was copied to the clipboard.'**
+  String get exportedClipboard;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountWarn.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and all your time data. This cannot be undone.'**
+  String get deleteAccountWarn;
+
+  /// No description provided for @deleteForever.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete forever'**
+  String get deleteForever;
+
+  /// No description provided for @resetToDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to defaults'**
+  String get resetToDefaults;
+
+  /// No description provided for @manageCategoriesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename, recolor, hide, or add your own areas.'**
+  String get manageCategoriesHint;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

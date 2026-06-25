@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../models/category.dart';
 import '../models/entry.dart';
 import '../models/user.dart';
 
@@ -109,15 +110,30 @@ class ApiClient {
   }
 
   Future<AppUser> updateMe(String token,
-      {String? name, String? timezone, String? language}) async {
+      {String? name,
+      String? timezone,
+      String? language,
+      List<CategoryDef>? categories}) async {
     final r = await _client.patch(_u('/me'),
         headers: _headers(token),
         body: jsonEncode({
           if (name != null) 'name': name,
           if (timezone != null) 'timezone': timezone,
           if (language != null) 'language': language,
+          if (categories != null)
+            'categories': categories.map((c) => c.toJson()).toList(),
         }));
     return AppUser.fromJson(await _decode(r) as Map<String, dynamic>);
+  }
+
+  Future<Map<String, dynamic>> exportData(String token) async {
+    final r = await _client.get(_u('/me/export'), headers: _headers(token));
+    return await _decode(r) as Map<String, dynamic>;
+  }
+
+  Future<void> deleteAccount(String token) async {
+    final r = await _client.delete(_u('/me'), headers: _headers(token));
+    await _decode(r);
   }
 
   Future<void> changePassword(

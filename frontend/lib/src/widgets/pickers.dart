@@ -5,11 +5,11 @@ import '../models/category.dart';
 import '../theme.dart';
 
 /// Modal category picker — works the same on mobile and web (a dropdown is
-/// awkward on touch, a sheet is one tap and fully legible).
-Future<TimeCategory?> pickCategory(
-    BuildContext context, TimeCategory? current) {
+/// awkward on touch, a sheet is one tap and fully legible). Returns the key.
+Future<String?> pickCategory(
+    BuildContext context, List<CategoryDef> categories, String? currentKey) {
   final l = AppL10n.of(context);
-  return showModalBottomSheet<TimeCategory>(
+  return showModalBottomSheet<String>(
     context: context,
     backgroundColor: AppColors.surface,
     shape: const RoundedRectangleBorder(
@@ -36,20 +36,28 @@ Future<TimeCategory?> pickCategory(
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.w600)),
             ),
-            for (final cat in TimeCategory.values)
-              ListTile(
-                leading: Container(
-                  width: 18,
-                  height: 18,
-                  decoration:
-                      BoxDecoration(color: cat.color, shape: BoxShape.circle),
-                ),
-                title: Text(cat.label(l)),
-                trailing: current == cat
-                    ? const Icon(Icons.check, color: AppColors.accentStrong)
-                    : null,
-                onTap: () => Navigator.pop(context, cat),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  for (final cat in categories)
+                    ListTile(
+                      leading: Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                            color: cat.color, shape: BoxShape.circle),
+                      ),
+                      title: Text(cat.displayLabel(l)),
+                      trailing: currentKey == cat.key
+                          ? const Icon(Icons.check,
+                              color: AppColors.accentStrong)
+                          : null,
+                      onTap: () => Navigator.pop(context, cat.key),
+                    ),
+                ],
               ),
+            ),
             const SizedBox(height: 8),
           ],
         ),

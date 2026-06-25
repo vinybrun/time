@@ -6,6 +6,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    Text,
     UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -41,6 +42,9 @@ class User(Base):
     email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     timezone: Mapped[str] = mapped_column(String(64), default="UTC")
     language: Mapped[str] = mapped_column(String(8), default="en")
+    # JSON-encoded list of the user's category config (native overrides +
+    # custom categories). NULL means "use the client defaults".
+    categories: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
     entries: Mapped[list["TimeEntry"]] = relationship(

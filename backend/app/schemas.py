@@ -1,8 +1,9 @@
+import re
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
-from .models import CATEGORIES
+_CATEGORY_KEY_RE = re.compile(r"^[a-z0-9_]{1,32}$")
 
 
 # --- Auth -----------------------------------------------------------------
@@ -52,14 +53,37 @@ class UserOut(BaseModel):
     email_verified: bool
     timezone: str
     language: str
+    categories: list[CategoryDef] | None = None
 
     model_config = {"from_attributes": True}
+
+    @field_validator("categories", mode="before")
+    @classmethod
+    def _parse_categories(cls, v):
+        if isinstance(v, str):
+            import json
+
+            try:
+                return json.loads(v)
+            except ValueError:
+                return None
+        return v
+
+
+class CategoryDef(BaseModel):
+    key: str = Field(pattern=r"^[a-z0-9_]{1,32}$")
+    label: str = Field(max_length=40)
+    color: int  # ARGB int
+    native: bool = False
+    enabled: bool = True
+    order: int = 0
 
 
 class SettingsIn(BaseModel):
     name: str | None = Field(default=None, max_length=120)
     timezone: str | None = Field(default=None, max_length=64)
     language: str | None = Field(default=None, max_length=8)
+    categories: list[CategoryDef] | None = Field(default=None, max_length=64)
 
 
 class PasswordChangeIn(BaseModel):
@@ -79,8 +103,10 @@ class EntryIn(BaseModel):
     @field_validator("category")
     @classmethod
     def _valid_category(cls, v: str) -> str:
-        if v not in CATEGORIES:
-            raise ValueError(f"invalid category: {v}")
+        # Category keys are owned by the client (native + custom), so the
+        # server just enforces a safe key shape rather than a fixed list.
+        if not _CATEGORY_KEY_RE.match(v):
+            raise ValueError(f"invalid category key: {v}")
         return v
 
     @field_validator("end_min")

@@ -91,5 +91,19 @@
         "type": "String"
       }
     }
-  }
+  },
+  "categories": "Categories",
+  "addCategory": "Add category",
+  "categoryName": "Category name",
+  "color": "Color",
+  "rename": "Rename",
+  "yourData": "Your data",
+  "exportData": "Export my data",
+  "exportedDownload": "Downloaded your data.",
+  "exportedClipboard": "Your data was copied to the clipboard.",
+  "deleteAccount": "Delete account",
+  "deleteAccountWarn": "This permanently deletes your account and all your time data. This cannot be undone.",
+  "deleteForever": "Delete forever",
+  "resetToDefaults": "Reset to defaults",
+  "manageCategoriesHint": "Rename, recolor, hide, or add your own areas."
 }

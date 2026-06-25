@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,7 +7,9 @@ import '../../l10n/app_localizations.dart';
 import '../state/providers.dart';
 import '../theme.dart';
 import '../util/errors.dart';
+import '../util/exporter.dart';
 import '../util/timezones.dart';
+import 'categories_screen.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -84,6 +88,52 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (e) {
       _snack(messageForError(e, l));
     } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _export() async {
+    final l = AppL10n.of(context);
+    setState(() => _busy = true);
+    try {
+      final data = await ref.read(authProvider).exportData();
+      final json = const JsonEncoder.withIndent('  ').convert(data);
+      final how = await saveExport('time-export.json', json);
+      _snack(how == 'download' ? l.exportedDownload : l.exportedClipboard);
+    } catch (e) {
+      _snack(messageForError(e, l));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _deleteAccount() async {
+    final l = AppL10n.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.deleteAccount),
+        content: Text(l.deleteAccountWarn),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l.cancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l.deleteForever),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    setState(() => _busy = true);
+    try {
+      await ref.read(authProvider).deleteAccount();
+      if (mounted) Navigator.of(context).pop(); // back to the (now) auth screen
+    } catch (e) {
+      _snack(messageForError(e, l));
       if (mounted) setState(() => _busy = false);
     }
   }
@@ -197,9 +247,54 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     child: Text(l.changePassword),
                   ),
                   const SizedBox(height: 28),
+                  _GroupTitle(l.categories),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      side: const BorderSide(color: AppColors.line),
+                      foregroundColor: AppColors.ink,
+                      alignment: Alignment.centerLeft,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
+                    ),
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (_) => const CategoriesScreen()),
+                    ),
+                    icon: const Icon(Icons.palette_outlined, size: 20),
+                    label: Text(l.manageCategoriesHint),
+                  ),
+                  const SizedBox(height: 28),
+                  _GroupTitle(l.yourData),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      side: const BorderSide(color: AppColors.line),
+                      foregroundColor: AppColors.ink,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
+                    ),
+                    onPressed: _busy ? null : _export,
+                    icon: const Icon(Icons.download_outlined, size: 20),
+                    label: Text(l.exportData),
+                  ),
+                  const SizedBox(height: 10),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      side: const BorderSide(color: AppColors.danger),
+                      foregroundColor: AppColors.danger,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
+                    ),
+                    onPressed: _busy ? null : _deleteAccount,
+                    icon: const Icon(Icons.delete_outline, size: 20),
+                    label: Text(l.deleteAccount),
+                  ),
+                  const SizedBox(height: 28),
                   TextButton.icon(
                     style: TextButton.styleFrom(
-                        foregroundColor: AppColors.danger,
+                        foregroundColor: AppColors.inkSoft,
                         minimumSize: const Size.fromHeight(48)),
                     onPressed: () async {
                       await ref.read(authProvider).logout();

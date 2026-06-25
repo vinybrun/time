@@ -1,7 +1,6 @@
-import 'category.dart';
-
 /// A segment of a day. Times are minutes from local midnight (0..1440).
-/// [endMin] is null while this is the currently-running focus.
+/// [endMin] is null while this is the currently-running focus. [category] is a
+/// category key resolved through the user's category registry.
 class TimeEntry {
   TimeEntry({
     required this.clientId,
@@ -14,7 +13,7 @@ class TimeEntry {
 
   final String clientId;
   final String day; // YYYY-MM-DD (local)
-  final TimeCategory category;
+  final String category; // category key
   final int startMin;
   final int? endMin;
   final DateTime? updatedAt;
@@ -29,7 +28,7 @@ class TimeEntry {
 
   TimeEntry copyWith({
     String? day,
-    TimeCategory? category,
+    String? category,
     int? startMin,
     Object? endMin = _unset,
     DateTime? updatedAt,
@@ -47,7 +46,7 @@ class TimeEntry {
   Map<String, dynamic> toJson() => {
         'client_id': clientId,
         'day': day,
-        'category': category.key,
+        'category': category,
         'start_min': startMin,
         'end_min': endMin,
         if (updatedAt != null) 'updated_at': updatedAt!.toIso8601String(),
@@ -56,7 +55,7 @@ class TimeEntry {
   factory TimeEntry.fromJson(Map<String, dynamic> j) => TimeEntry(
         clientId: j['client_id'] as String,
         day: j['day'] as String,
-        category: TimeCategory.fromKey(j['category'] as String),
+        category: j['category'] as String,
         startMin: j['start_min'] as int,
         endMin: j['end_min'] as int?,
         updatedAt: j['updated_at'] != null

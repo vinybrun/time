@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../models/category.dart';
 import '../state/providers.dart';
 import '../theme.dart';
 import '../util/time_utils.dart';
@@ -26,10 +25,49 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // Pull authoritative state in the background; UI already shows the cache.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _loadCategoriesFromUser();
       ref.read(entriesProvider).pushSync();
-      ref.read(authProvider).refreshMe();
+      await ref.read(authProvider).refreshMe();
+      _loadCategoriesFromUser();
     });
+  }
+
+  void _loadCategoriesFromUser() {
+    final cats = ref.read(authProvider).user?.categories;
+    if (cats != null && cats.isNotEmpty) {
+      ref.read(categoriesProvider).load(cats);
+    }
+  }
+
+  // Drag-to-edit handoff state.
+  String? _dragA, _dragB;
+  int _dragOrigB = 0, _dragMinB = 0, _dragMaxB = 1440;
+
+  void _onDragStart(List<DonutSegment> segments, String day, int leftIndex) {
+    _dragA = _dragB = null;
+    if (leftIndex < 0 || leftIndex + 1 >= segments.length) return;
+    final aKey = segments[leftIndex].def.key;
+    final bKey = segments[leftIndex + 1].def.key;
+    final nowMin = minutesOfDay(DateTime.now());
+    final h = ref.read(entriesProvider).handoff(day, aKey, bKey, nowMin);
+    if (h == null) return;
+    _dragA = h.aId;
+    _dragB = h.bId;
+    _dragOrigB = h.boundary;
+    _dragMinB = h.minB;
+    _dragMaxB = h.maxB;
+  }
+
+  void _onDragUpdate(int deltaMin) {
+    if (_dragA == null || _dragB == null) return;
+    final newB = (_dragOrigB + deltaMin).clamp(_dragMinB, _dragMaxB);
+    ref.read(entriesProvider).moveHandoff(_dragA!, _dragB!, newB, push: false);
+  }
+
+  void _onDragEnd() {
+    if (_dragA != null) ref.read(entriesProvider).pushSync();
+    _dragA = _dragB = null;
   }
 
   @override
@@ -51,6 +89,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final l = AppL10n.of(context);
     final day = ref.watch(selectedDayProvider);
     final entries = ref.watch(entriesProvider);
+    final cats = ref.watch(categoriesProvider);
     ref.watch(nowMinProvider);
     final todayStr = today();
     final nowMin = minutesOfDay(DateTime.now());
@@ -59,15 +98,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     // Donut segments ordered by each category's FIRST entry of the day
     // (the "where is your focus" buttons keep their fixed order instead).
     final dayEntries = entries.forDay(day); // sorted by start time
-    final order = <TimeCategory>[];
-    final sums = <TimeCategory, int>{};
+    final order = <String>[];
+    final sums = <String, int>{};
     for (final e in dayEntries) {
       sums[e.category] = (sums[e.category] ?? 0) + e.durationMin(refMin);
       if (!order.contains(e.category)) order.add(e.category);
     }
     final segments = [
-      for (final cat in order)
-        if ((sums[cat] ?? 0) > 0) DonutSegment(cat, sums[cat]!),
+      for (final key in order)
+        if ((sums[key] ?? 0) > 0) DonutSegment(cats.resolve(key), sums[key]!),
     ];
     final total = entries.totalMin(day, refMin);
 
@@ -106,6 +145,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         centerLabel: day == todayStr
                             ? l.today
                             : _dayNumber(day),
+                        onBoundaryDragStart: (i) =>
+                            _onDragStart(segments, day, i),
+                        onBoundaryDragUpdate: _onDragUpdate,
+                        onBoundaryDragEnd: _onDragEnd,
                       ),
                       const SizedBox(height: 12),
                       const Padding(

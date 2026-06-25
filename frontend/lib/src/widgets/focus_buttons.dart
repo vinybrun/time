@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../models/category.dart';
 import '../state/providers.dart';
 import '../theme.dart';
 import '../util/time_utils.dart';
@@ -16,6 +15,7 @@ class FocusButtons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppL10n.of(context);
     final entries = ref.watch(entriesProvider);
+    final cats = ref.watch(categoriesProvider);
     ref.watch(nowMinProvider);
     final todayStr = today();
     final selected = ref.watch(selectedDayProvider);
@@ -27,18 +27,18 @@ class FocusButtons extends ConsumerWidget {
       runSpacing: 8,
       alignment: WrapAlignment.center,
       children: [
-        for (final cat in TimeCategory.values)
+        for (final cat in cats.enabled)
           _FocusChip(
             key: ValueKey('focus_${cat.key}'),
-            label: cat.label(l),
+            label: cat.displayLabel(l),
             color: cat.color,
-            active: isToday && current == cat,
+            active: isToday && current == cat.key,
             onTap: () {
               // Switching focus always operates on today.
               if (!isToday) {
                 ref.read(selectedDayProvider.notifier).state = todayStr;
               }
-              ref.read(entriesProvider).setFocus(cat);
+              ref.read(entriesProvider).setFocus(cat.key);
             },
           ),
       ],

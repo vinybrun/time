@@ -67,5 +67,19 @@
   "sendResetCode": "Code senden",
   "resetCodeHint": "Gib den an {email} gesendeten Code ein und wähle ein neues Passwort.",
   "doReset": "Passwort zurücksetzen",
-  "backToSignIn": "Zurück zur Anmeldung"
+  "backToSignIn": "Zurück zur Anmeldung",
+  "categories": "Kategorien",
+  "addCategory": "Kategorie hinzufügen",
+  "categoryName": "Kategoriename",
+  "color": "Farbe",
+  "rename": "Umbenennen",
+  "yourData": "Deine Daten",
+  "exportData": "Meine Daten exportieren",
+  "exportedDownload": "Daten heruntergeladen.",
+  "exportedClipboard": "Deine Daten wurden in die Zwischenablage kopiert.",
+  "deleteAccount": "Konto löschen",
+  "deleteAccountWarn": "Dies löscht dein Konto und alle deine Zeitdaten dauerhaft. Kann nicht rückgängig gemacht werden.",
+  "deleteForever": "Endgültig löschen",
+  "resetToDefaults": "Auf Standard zurücksetzen",
+  "manageCategoriesHint": "Benenne um, färbe um, blende aus oder füge eigene Bereiche hinzu."
 }

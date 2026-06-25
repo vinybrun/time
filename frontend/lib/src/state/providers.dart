@@ -7,6 +7,7 @@ import '../data/api_client.dart';
 import '../data/local_store.dart';
 import '../util/time_utils.dart';
 import 'auth_notifier.dart';
+import 'categories_notifier.dart';
 import 'entries_notifier.dart';
 
 /// Provided at app startup via ProviderScope overrides.
@@ -26,6 +27,17 @@ final entriesProvider = ChangeNotifierProvider<EntriesNotifier>((ref) {
     ref.watch(localStoreProvider),
     ref.watch(apiClientProvider),
     () => auth.token,
+  );
+});
+
+final categoriesProvider = ChangeNotifierProvider<CategoriesNotifier>((ref) {
+  return CategoriesNotifier(
+    ref.watch(localStoreProvider),
+    (cats) async {
+      try {
+        await ref.read(authProvider).updateSettings(categories: cats);
+      } catch (_) {/* offline: local copy is kept, retried on next change */}
+    },
   );
 });
 

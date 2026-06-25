@@ -67,5 +67,19 @@
   "sendResetCode": "Enviar código",
   "resetCodeHint": "Escribe el código que enviamos a {email} y elige una nueva contraseña.",
   "doReset": "Restablecer contraseña",
-  "backToSignIn": "Volver a iniciar sesión"
+  "backToSignIn": "Volver a iniciar sesión",
+  "categories": "Categorías",
+  "addCategory": "Añadir categoría",
+  "categoryName": "Nombre de la categoría",
+  "color": "Color",
+  "rename": "Renombrar",
+  "yourData": "Tus datos",
+  "exportData": "Exportar mis datos",
+  "exportedDownload": "Datos descargados.",
+  "exportedClipboard": "Tus datos se copiaron al portapapeles.",
+  "deleteAccount": "Eliminar cuenta",
+  "deleteAccountWarn": "Esto elimina permanentemente tu cuenta y todos tus datos de tiempo. No se puede deshacer.",
+  "deleteForever": "Eliminar para siempre",
+  "resetToDefaults": "Restablecer valores",
+  "manageCategoriesHint": "Renombra, recolorea, oculta o añade tus propias áreas."
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../models/category.dart';
 import '../models/entry.dart';
+import '../state/categories_notifier.dart';
 import '../state/providers.dart';
 import '../theme.dart';
 import '../util/time_utils.dart';
@@ -17,13 +18,21 @@ class HistorySection extends ConsumerStatefulWidget {
 }
 
 class _HistorySectionState extends ConsumerState<HistorySection> {
-  TimeCategory _draftCat = TimeCategory.work;
+  String? _draftCatKey;
   int _draftStart = 9 * 60;
   int _draftEnd = 10 * 60;
 
-  Future<void> _pickDraftCat() async {
-    final c = await pickCategory(context, _draftCat);
-    if (c != null) setState(() => _draftCat = c);
+  String _draftKey(CategoriesNotifier cats) {
+    final enabled = cats.enabled;
+    if (_draftCatKey != null && enabled.any((c) => c.key == _draftCatKey)) {
+      return _draftCatKey!;
+    }
+    return enabled.isNotEmpty ? enabled.first.key : kDefaultCategoryKey;
+  }
+
+  Future<void> _pickDraftCat(CategoriesNotifier cats) async {
+    final k = await pickCategory(context, cats.enabled, _draftKey(cats));
+    if (k != null) setState(() => _draftCatKey = k);
   }
 
   Future<void> _pickDraftStart() async {
@@ -36,7 +45,7 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
     if (m != null) setState(() => _draftEnd = m);
   }
 
-  void _add() {
+  void _add(CategoriesNotifier cats) {
     final l = AppL10n.of(context);
     if (_draftEnd <= _draftStart) {
       ScaffoldMessenger.of(context)
@@ -44,7 +53,7 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
       return;
     }
     final day = ref.read(selectedDayProvider);
-    ref.read(entriesProvider).addManual(day, _draftCat, _draftStart, _draftEnd);
+    ref.read(entriesProvider).addManual(day, _draftKey(cats), _draftStart, _draftEnd);
   }
 
   @override
@@ -52,8 +61,10 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
     final l = AppL10n.of(context);
     final day = ref.watch(selectedDayProvider);
     final entries = ref.watch(entriesProvider);
+    final cats = ref.watch(categoriesProvider);
     ref.watch(nowMinProvider);
     final rows = entries.forDay(day);
+    final draft = cats.resolve(_draftKey(cats));
 
     return Card(
       child: Padding(
@@ -69,25 +80,24 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
                 style:
                     const TextStyle(fontSize: 12, color: AppColors.inkFaint)),
             const SizedBox(height: 14),
-            // Add-entry row.
             Row(
               children: [
                 Expanded(
                   flex: 4,
                   child: _Field(
                     label: l.category,
-                    onTap: _pickDraftCat,
+                    onTap: () => _pickDraftCat(cats),
                     child: Row(
                       children: [
                         Container(
                           width: 12,
                           height: 12,
                           decoration: BoxDecoration(
-                              color: _draftCat.color, shape: BoxShape.circle),
+                              color: draft.color, shape: BoxShape.circle),
                         ),
                         const SizedBox(width: 6),
                         Flexible(
-                          child: Text(_draftCat.label(l),
+                          child: Text(draft.displayLabel(l),
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(fontSize: 13)),
                         ),
@@ -128,7 +138,7 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
                     backgroundColor: AppColors.accentStrong,
                     minimumSize: const Size(44, 44),
                   ),
-                  onPressed: _add,
+                  onPressed: () => _add(cats),
                   icon: const Icon(Icons.add, color: Colors.white),
                   tooltip: l.add,
                 ),
@@ -194,13 +204,15 @@ class _EntryRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppL10n.of(context);
     final notifier = ref.read(entriesProvider);
+    final cats = ref.watch(categoriesProvider);
+    final def = cats.resolve(entry.category);
     final nowMin = minutesOfDay(DateTime.now());
     final endLabel =
         entry.isRunning ? l.running : formatMinutes(entry.endMin ?? nowMin);
 
     Future<void> editCat() async {
-      final c = await pickCategory(context, entry.category);
-      if (c != null) notifier.updateEntry(entry.clientId, category: c);
+      final k = await pickCategory(context, cats.enabled, entry.category);
+      if (k != null) notifier.updateEntry(entry.clientId, category: k);
     }
 
     Future<void> editStart() async {
@@ -231,11 +243,11 @@ class _EntryRow extends ConsumerWidget {
                       width: 12,
                       height: 12,
                       decoration: BoxDecoration(
-                          color: entry.category.color, shape: BoxShape.circle),
+                          color: def.color, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 8),
                     Flexible(
-                      child: Text(entry.category.label(l),
+                      child: Text(def.displayLabel(l),
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 13.5)),
                     ),
@@ -286,7 +298,6 @@ class _TimeCell extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 13.5,
-            fontFeatures: const [],
             color: muted ? AppColors.accentStrong : AppColors.ink,
             fontWeight: muted ? FontWeight.w600 : FontWeight.w500,
           ),
