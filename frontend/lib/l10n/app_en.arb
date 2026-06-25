@@ -1,0 +1,81 @@
+{
+  "@@locale": "en",
+  "appTitle": "Time",
+  "focusTitle": "Where is your focus now?",
+  "historyTitle": "You can change history",
+  "addEntry": "Add a time entry",
+  "category": "Category",
+  "startTime": "Start",
+  "endTime": "End",
+  "add": "Add",
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "running": "now",
+  "today": "Today",
+  "totalLogged": "{hours}h {minutes}m logged",
+  "@totalLogged": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "noEntries": "No entries yet. Pick a focus above to begin.",
+  "settingsTitle": "Settings",
+  "name": "Name",
+  "timezone": "Time zone",
+  "language": "Language",
+  "languageAuto": "Automatic",
+  "account": "Account",
+  "changePassword": "Change password",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "logout": "Log out",
+  "madeBy": "Made by Viny",
+  "openSettings": "Settings",
+  "signIn": "Sign in",
+  "signUp": "Create account",
+  "email": "Email",
+  "password": "Password",
+  "haveAccount": "Already have an account? Sign in",
+  "needAccount": "New here? Create an account",
+  "verifyTitle": "Check your email",
+  "verifyHint": "We sent a 6-digit code to {email}",
+  "@verifyHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "code": "6-digit code",
+  "verify": "Verify",
+  "resendCode": "Resend code",
+  "welcomeTagline": "A calm picture of where your day goes.",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorInvalidCredentials": "Invalid email or password.",
+  "errorInvalidCode": "That code is not valid or has expired.",
+  "errorEmailTaken": "An account with this email already exists.",
+  "errorPasswordShort": "Password must be at least 8 characters.",
+  "errorWrongCurrentPassword": "Current password is incorrect.",
+  "passwordChanged": "Password updated.",
+  "settingsSaved": "Saved.",
+  "savedOffline": "Saved on this device. Will sync when online.",
+  "catWork": "Work",
+  "catPersonalChores": "Personal chores",
+  "catPersonalProjects": "Personal projects",
+  "catLeisure": "Leisure",
+  "catRelationships": "Relationships",
+  "catSelfMaintenance": "Self maintenance",
+  "catGrowth": "Growth",
+  "catSleep": "Sleep",
+  "catUncategorized": "Uncategorized",
+  "entryOverlapNote": "Entries can overlap; the circle sums each category.",
+  "deleteEntryConfirm": "Delete this entry?",
+  "downloadApk": "Download Android app (.apk)"
+}

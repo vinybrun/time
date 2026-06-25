@@ -1,0 +1,31 @@
+# Proofs are local-only (screenshots, logs)
+/proofs/
+
+# Secrets / env
+.env
+*.env.local
+backend/.env
+
+# Python
+backend/.venv/
+**/__pycache__/
+*.pyc
+*.db
+*.sqlite3
+
+# Flutter / Dart
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/proofs_shots/
+frontend/android/.gradle/
+frontend/android/local.properties
+frontend/.idea/
+frontend/ios/Pods/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/

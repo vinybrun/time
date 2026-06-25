@@ -1,0 +1,28 @@
+# systemd unit for the Time backend (uvicorn). Install to
+# /etc/systemd/system/time-api.service, then:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now time-api
+[Unit]
+Description=Time API (FastAPI/uvicorn)
+After=network.target
+
+# __USER__ and __DIR__ are substituted by deploy/bootstrap-remote.sh from the
+# DEPLOY_HOST / DEPLOY_DIR you pass at invocation (keeps real infra out of git).
+[Service]
+Type=simple
+User=__USER__
+Group=__USER__
+WorkingDirectory=__DIR__/backend
+EnvironmentFile=__DIR__/.env
+ExecStart=__DIR__/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8810
+Restart=on-failure
+RestartSec=3
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=__DIR__/data
+
+[Install]
+WantedBy=multi-user.target
