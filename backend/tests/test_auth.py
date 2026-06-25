@@ -54,6 +54,36 @@ def test_change_password(client):
     assert client.post("/api/v1/auth/login", json={"email": "pw@e.com", "password": "newsecret99"}).status_code == 200
 
 
+def test_forgot_and_reset_password(client):
+    register_and_verify(client, email="reset@e.com", password="oldpassword1")
+    # Request a reset code (exposed in test mode via captured_emails).
+    r = client.post("/api/v1/auth/forgot-password", json={"email": "reset@e.com"})
+    assert r.status_code == 200
+    code = client.captured_emails[-1]["code"]
+    # Reset with the code -> logs in.
+    r = client.post("/api/v1/auth/reset-password", json={"email": "reset@e.com", "code": code, "new_password": "brandnew123"})
+    assert r.status_code == 200, r.text
+    assert r.json()["access_token"]
+    # Old password no longer works; new one does.
+    assert client.post("/api/v1/auth/login", json={"email": "reset@e.com", "password": "oldpassword1"}).status_code == 401
+    assert client.post("/api/v1/auth/login", json={"email": "reset@e.com", "password": "brandnew123"}).status_code == 200
+
+
+def test_reset_password_wrong_code(client):
+    register_and_verify(client, email="reset2@e.com")
+    client.post("/api/v1/auth/forgot-password", json={"email": "reset2@e.com"})
+    r = client.post("/api/v1/auth/reset-password", json={"email": "reset2@e.com", "code": "000000", "new_password": "brandnew123"})
+    assert r.status_code == 400
+
+
+def test_forgot_password_unknown_email_no_enumeration(client):
+    # Returns 200 even for an unknown address, and sends nothing.
+    before = len(client.captured_emails)
+    r = client.post("/api/v1/auth/forgot-password", json={"email": "nobody@e.com"})
+    assert r.status_code == 200
+    assert len(client.captured_emails) == before
+
+
 def test_update_settings(client):
     data = register_and_verify(client, email="set@e.com")
     h = {"Authorization": f"Bearer {data['access_token']}"}

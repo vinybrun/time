@@ -7,7 +7,7 @@ import '../state/providers.dart';
 import '../theme.dart';
 import '../util/errors.dart';
 
-enum _Mode { signIn, signUp }
+enum _Mode { signIn, signUp, forgotEmail, forgotReset }
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -64,7 +64,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
-              child: needsVerify ? _buildVerify(l, auth) : _buildAuth(l),
+              child: needsVerify
+                  ? _buildVerify(l, auth)
+                  : _mode == _Mode.forgotEmail
+                      ? _buildForgotEmail(l)
+                      : _mode == _Mode.forgotReset
+                          ? _buildForgotReset(l)
+                          : _buildAuth(l),
             ),
           ),
         ),
@@ -151,13 +157,123 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       strokeWidth: 2.4, color: Colors.white))
               : Text(isSignUp ? l.signUp : l.signIn),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
         TextButton(
           onPressed: _busy
               ? null
               : () => setState(() =>
                   _mode = isSignUp ? _Mode.signIn : _Mode.signUp),
           child: Text(isSignUp ? l.haveAccount : l.needAccount),
+        ),
+        if (!isSignUp)
+          TextButton(
+            onPressed: _busy
+                ? null
+                : () => setState(() => _mode = _Mode.forgotEmail),
+            child: Text(l.forgotPassword),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildForgotEmail(AppL10n l) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _brand(l),
+        Text(l.resetTitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        Text(l.resetEmailHint,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppColors.inkSoft)),
+        const SizedBox(height: 20),
+        TextField(
+          controller: _email,
+          keyboardType: TextInputType.emailAddress,
+          autocorrect: false,
+          decoration: InputDecoration(labelText: l.email),
+        ),
+        const SizedBox(height: 16),
+        FilledButton(
+          onPressed: _busy
+              ? null
+              : () => _run(() async {
+                    await ref.read(authProvider).forgotPassword(_email.text);
+                    if (mounted) setState(() => _mode = _Mode.forgotReset);
+                  }),
+          child: _busy
+              ? const SizedBox(
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2.4, color: Colors.white))
+              : Text(l.sendResetCode),
+        ),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: _busy ? null : () => setState(() => _mode = _Mode.signIn),
+          child: Text(l.backToSignIn),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildForgotReset(AppL10n l) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _brand(l),
+        Text(l.resetTitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        Text(l.resetCodeHint(_email.text),
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppColors.inkSoft)),
+        const SizedBox(height: 20),
+        TextField(
+          controller: _code,
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          maxLength: 6,
+          style: const TextStyle(fontSize: 24, letterSpacing: 8),
+          decoration: const InputDecoration(counterText: '', hintText: '••••••'),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _password,
+          obscureText: _obscure,
+          decoration: InputDecoration(
+            labelText: l.newPassword,
+            suffixIcon: IconButton(
+              icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
+              onPressed: () => setState(() => _obscure = !_obscure),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        FilledButton(
+          onPressed: _busy
+              ? null
+              : () => _run(() => ref
+                  .read(authProvider)
+                  .resetPassword(_email.text, _code.text, _password.text)),
+          child: _busy
+              ? const SizedBox(
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2.4, color: Colors.white))
+              : Text(l.doReset),
+        ),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: _busy ? null : () => setState(() => _mode = _Mode.signIn),
+          child: Text(l.backToSignIn),
         ),
       ],
     );

@@ -75,6 +75,23 @@ class ApiClient {
         AppUser.fromJson(body['user'] as Map<String, dynamic>));
   }
 
+  Future<void> forgotPassword(String email) async {
+    final r = await _client.post(_u('/auth/forgot-password'),
+        headers: _headers(null), body: jsonEncode({'email': email}));
+    await _decode(r);
+  }
+
+  Future<AuthResult> resetPassword(
+      String email, String code, String newPassword) async {
+    final r = await _client.post(_u('/auth/reset-password'),
+        headers: _headers(null),
+        body: jsonEncode(
+            {'email': email, 'code': code, 'new_password': newPassword}));
+    final body = await _decode(r) as Map<String, dynamic>;
+    return AuthResult(body['access_token'] as String,
+        AppUser.fromJson(body['user'] as Map<String, dynamic>));
+  }
+
   Future<AuthResult> login(String email, String password) async {
     final r = await _client.post(_u('/auth/login'),
         headers: _headers(null),

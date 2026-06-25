@@ -61,6 +61,15 @@ class AuthNotifier extends ChangeNotifier {
 
   Future<void> resend(String email) => _api.resend(email.trim());
 
+  Future<void> forgotPassword(String email) =>
+      _api.forgotPassword(email.trim());
+
+  Future<void> resetPassword(
+      String email, String code, String newPassword) async {
+    final res = await _api.resetPassword(email.trim(), code.trim(), newPassword);
+    await _onAuthenticated(res);
+  }
+
   Future<void> _onAuthenticated(AuthResult res) async {
     _token = res.token;
     _user = res.user;

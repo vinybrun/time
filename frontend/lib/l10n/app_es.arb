@@ -60,5 +60,12 @@
   "catUncategorized": "Sin categoría",
   "entryOverlapNote": "Los registros pueden superponerse; el círculo suma cada categoría.",
   "deleteEntryConfirm": "¿Eliminar este registro?",
-  "downloadApk": "Descargar app de Android (.apk)"
+  "downloadApk": "Descargar app de Android (.apk)",
+  "forgotPassword": "¿Olvidaste tu contraseña?",
+  "resetTitle": "Restablecer tu contraseña",
+  "resetEmailHint": "Escribe tu correo y te enviaremos un código.",
+  "sendResetCode": "Enviar código",
+  "resetCodeHint": "Escribe el código que enviamos a {email} y elige una nueva contraseña.",
+  "doReset": "Restablecer contraseña",
+  "backToSignIn": "Volver a iniciar sesión"
 }

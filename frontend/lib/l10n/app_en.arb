@@ -77,5 +77,19 @@
   "catUncategorized": "Uncategorized",
   "entryOverlapNote": "Entries can overlap; the circle sums each category.",
   "deleteEntryConfirm": "Delete this entry?",
-  "downloadApk": "Download Android app (.apk)"
+  "downloadApk": "Download Android app (.apk)",
+  "forgotPassword": "Forgot password?",
+  "resetTitle": "Reset your password",
+  "resetEmailHint": "Enter your email and we'll send a reset code.",
+  "sendResetCode": "Send reset code",
+  "resetCodeHint": "Enter the code we sent to {email} and choose a new password.",
+  "doReset": "Reset password",
+  "backToSignIn": "Back to sign in",
+  "@resetCodeHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

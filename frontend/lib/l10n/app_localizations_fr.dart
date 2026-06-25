@@ -199,4 +199,28 @@ class AppL10nFr extends AppL10n {
 
   @override
   String get downloadApk => 'Télécharger l\'app Android (.apk)';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get resetTitle => 'Réinitialiser le mot de passe';
+
+  @override
+  String get resetEmailHint =>
+      'Saisis ton e-mail et nous t\'enverrons un code.';
+
+  @override
+  String get sendResetCode => 'Envoyer le code';
+
+  @override
+  String resetCodeHint(String email) {
+    return 'Saisis le code envoyé à $email et choisis un nouveau mot de passe.';
+  }
+
+  @override
+  String get doReset => 'Réinitialiser';
+
+  @override
+  String get backToSignIn => 'Retour à la connexion';
 }

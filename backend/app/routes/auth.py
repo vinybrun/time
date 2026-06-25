@@ -7,12 +7,14 @@ from sqlalchemy.orm import Session
 
 from ..config import get_settings
 from ..db import get_db
-from ..email_util import send_verification_email
+from ..email_util import send_password_reset_email, send_verification_email
 from ..models import User, VerificationCode
 from ..schemas import (
+    ForgotPasswordIn,
     LoginIn,
     RegisterIn,
     ResendIn,
+    ResetPasswordIn,
     TokenOut,
     UserOut,
     VerifyIn,
@@ -35,28 +37,55 @@ def _normalize_email(email: str) -> str:
     return email.strip().lower()
 
 
-def _issue_code(db: Session, user: User) -> str:
-    """Invalidate old codes, create a fresh one, and email it. Returns the code."""
+def _issue_code(db: Session, user: User, purpose: str = "verify_email") -> str:
+    """Invalidate old codes of this purpose, create a fresh one, email it."""
     db.query(VerificationCode).filter(
         VerificationCode.user_id == user.id,
-        VerificationCode.purpose == "verify_email",
+        VerificationCode.purpose == purpose,
         VerificationCode.used == False,  # noqa: E712
     ).update({"used": True})
     code = generate_code()
     vc = VerificationCode(
         user_id=user.id,
         code_hash=hash_code(code),
-        purpose="verify_email",
+        purpose=purpose,
         expires_at=datetime.now(timezone.utc)
         + timedelta(minutes=settings.code_ttl_minutes),
     )
     db.add(vc)
     db.commit()
     try:
-        send_verification_email(user.email, user.name, code)
-    except Exception as exc:  # email failure shouldn't 500 registration
-        log.error("Failed to send verification email to %s: %s", user.email, exc)
+        if purpose == "reset_password":
+            send_password_reset_email(user.email, user.name, code)
+        else:
+            send_verification_email(user.email, user.name, code)
+    except Exception as exc:  # email failure shouldn't 500 the request
+        log.error("Failed to send %s email to %s: %s", purpose, user.email, exc)
     return code
+
+
+def _consume_code(db: Session, user: User, code: str, purpose: str) -> bool:
+    """Validate and burn the newest unused code of [purpose]. True if valid."""
+    vc = db.scalar(
+        select(VerificationCode)
+        .where(
+            VerificationCode.user_id == user.id,
+            VerificationCode.purpose == purpose,
+            VerificationCode.used == False,  # noqa: E712
+        )
+        .order_by(VerificationCode.id.desc())
+    )
+    if vc is None:
+        return False
+    expires = vc.expires_at
+    if expires.tzinfo is None:
+        expires = expires.replace(tzinfo=timezone.utc)
+    if expires < datetime.now(timezone.utc):
+        return False
+    if not verify_code(code, vc.code_hash):
+        return False
+    vc.used = True
+    return True
 
 
 def _maybe_expose(code: str) -> dict:
@@ -123,30 +152,32 @@ def dev_code(email: str, db: Session = Depends(get_db)) -> dict:
 def verify(payload: VerifyIn, db: Session = Depends(get_db)) -> TokenOut:
     email = _normalize_email(payload.email)
     user = db.scalar(select(User).where(User.email == email))
-    if user is None:
-        raise HTTPException(status_code=400, detail="Invalid code")
-
-    vc = db.scalar(
-        select(VerificationCode)
-        .where(
-            VerificationCode.user_id == user.id,
-            VerificationCode.purpose == "verify_email",
-            VerificationCode.used == False,  # noqa: E712
-        )
-        .order_by(VerificationCode.id.desc())
-    )
-    if vc is None:
-        raise HTTPException(status_code=400, detail="Invalid code")
-    expires = vc.expires_at
-    if expires.tzinfo is None:
-        expires = expires.replace(tzinfo=timezone.utc)
-    if expires < datetime.now(timezone.utc):
-        raise HTTPException(status_code=400, detail="Code expired")
-    if not verify_code(payload.code, vc.code_hash):
-        raise HTTPException(status_code=400, detail="Invalid code")
-
-    vc.used = True
+    if user is None or not _consume_code(db, user, payload.code, "verify_email"):
+        raise HTTPException(status_code=400, detail="Invalid or expired code")
     user.email_verified = True
+    db.commit()
+    db.refresh(user)
+    return TokenOut(access_token=create_access_token(user.id), user=UserOut.model_validate(user))
+
+
+@router.post("/forgot-password")
+def forgot_password(payload: ForgotPasswordIn, db: Session = Depends(get_db)) -> dict:
+    email = _normalize_email(payload.email)
+    user = db.scalar(select(User).where(User.email == email))
+    # Same response whether or not the account exists (no enumeration).
+    code = ""
+    if user is not None and user.email_verified:
+        code = _issue_code(db, user, "reset_password")
+    return {"status": "reset_sent", "email": email, **_maybe_expose(code)}
+
+
+@router.post("/reset-password", response_model=TokenOut)
+def reset_password(payload: ResetPasswordIn, db: Session = Depends(get_db)) -> TokenOut:
+    email = _normalize_email(payload.email)
+    user = db.scalar(select(User).where(User.email == email))
+    if user is None or not _consume_code(db, user, payload.code, "reset_password"):
+        raise HTTPException(status_code=400, detail="Invalid or expired code")
+    user.password_hash = hash_password(payload.new_password)
     db.commit()
     db.refresh(user)
     return TokenOut(access_token=create_access_token(user.id), user=UserOut.model_validate(user))

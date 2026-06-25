@@ -195,4 +195,27 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get downloadApk => 'Download Android app (.apk)';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get resetTitle => 'Reset your password';
+
+  @override
+  String get resetEmailHint => 'Enter your email and we\'ll send a reset code.';
+
+  @override
+  String get sendResetCode => 'Send reset code';
+
+  @override
+  String resetCodeHint(String email) {
+    return 'Enter the code we sent to $email and choose a new password.';
+  }
+
+  @override
+  String get doReset => 'Reset password';
+
+  @override
+  String get backToSignIn => 'Back to sign in';
 }

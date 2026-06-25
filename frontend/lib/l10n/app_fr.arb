@@ -60,5 +60,12 @@
   "catUncategorized": "Sans catégorie",
   "entryOverlapNote": "Les entrées peuvent se chevaucher ; le cercle additionne chaque catégorie.",
   "deleteEntryConfirm": "Supprimer cette entrée ?",
-  "downloadApk": "Télécharger l'app Android (.apk)"
+  "downloadApk": "Télécharger l'app Android (.apk)",
+  "forgotPassword": "Mot de passe oublié ?",
+  "resetTitle": "Réinitialiser le mot de passe",
+  "resetEmailHint": "Saisis ton e-mail et nous t'enverrons un code.",
+  "sendResetCode": "Envoyer le code",
+  "resetCodeHint": "Saisis le code envoyé à {email} et choisis un nouveau mot de passe.",
+  "doReset": "Réinitialiser",
+  "backToSignIn": "Retour à la connexion"
 }

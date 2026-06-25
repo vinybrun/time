@@ -468,6 +468,48 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Download Android app (.apk)'**
   String get downloadApk;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetTitle;
+
+  /// No description provided for @resetEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we\'ll send a reset code.'**
+  String get resetEmailHint;
+
+  /// No description provided for @sendResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset code'**
+  String get sendResetCode;
+
+  /// No description provided for @resetCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code we sent to {email} and choose a new password.'**
+  String resetCodeHint(String email);
+
+  /// No description provided for @doReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get doReset;
+
+  /// No description provided for @backToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get backToSignIn;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

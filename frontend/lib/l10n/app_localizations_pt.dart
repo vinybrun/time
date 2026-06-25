@@ -197,4 +197,28 @@ class AppL10nPt extends AppL10n {
 
   @override
   String get downloadApk => 'Baixar app Android (.apk)';
+
+  @override
+  String get forgotPassword => 'Esqueceu a senha?';
+
+  @override
+  String get resetTitle => 'Redefinir sua senha';
+
+  @override
+  String get resetEmailHint =>
+      'Digite seu e-mail e enviaremos um código de redefinição.';
+
+  @override
+  String get sendResetCode => 'Enviar código';
+
+  @override
+  String resetCodeHint(String email) {
+    return 'Digite o código enviado para $email e escolha uma nova senha.';
+  }
+
+  @override
+  String get doReset => 'Redefinir senha';
+
+  @override
+  String get backToSignIn => 'Voltar para entrar';
 }

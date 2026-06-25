@@ -22,6 +22,7 @@ def captured_emails(monkeypatch):
         sent.append({"to": to_addr, "name": name, "code": code})
 
     monkeypatch.setattr("app.routes.auth.send_verification_email", fake_send)
+    monkeypatch.setattr("app.routes.auth.send_password_reset_email", fake_send)
     return sent
 
 

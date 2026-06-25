@@ -60,5 +60,12 @@
   "catUncategorized": "Ohne Kategorie",
   "entryOverlapNote": "Einträge können sich überschneiden; der Kreis summiert jede Kategorie.",
   "deleteEntryConfirm": "Diesen Eintrag löschen?",
-  "downloadApk": "Android-App herunterladen (.apk)"
+  "downloadApk": "Android-App herunterladen (.apk)",
+  "forgotPassword": "Passwort vergessen?",
+  "resetTitle": "Passwort zurücksetzen",
+  "resetEmailHint": "Gib deine E-Mail ein, wir senden dir einen Code.",
+  "sendResetCode": "Code senden",
+  "resetCodeHint": "Gib den an {email} gesendeten Code ein und wähle ein neues Passwort.",
+  "doReset": "Passwort zurücksetzen",
+  "backToSignIn": "Zurück zur Anmeldung"
 }
