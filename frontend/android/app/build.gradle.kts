@@ -27,9 +27,15 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+        debug {
+            // Install the debug variant as a separate package so on-device
+            // integration tests never disturb the installed release app
+            // (avoids MIUI/HyperOS reinstall + permission-reset prompts).
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
         }
     }
 }
