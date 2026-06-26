@@ -105,7 +105,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   Widget _buildAuth(AppL10n l) {
     final isSignUp = _mode == _Mode.signUp;
-    return Column(
+    return AutofillGroup(
+      child: Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -114,6 +115,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           TextField(
             controller: _name,
             textCapitalization: TextCapitalization.words,
+            autofillHints: const [AutofillHints.name],
             decoration: InputDecoration(labelText: l.name),
           ),
           const SizedBox(height: 12),
@@ -122,12 +124,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           controller: _email,
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
+          autofillHints: const [AutofillHints.email, AutofillHints.username],
           decoration: InputDecoration(labelText: l.email),
         ),
         const SizedBox(height: 12),
         TextField(
           controller: _password,
           obscureText: _obscure,
+          autofillHints: [
+            isSignUp ? AutofillHints.newPassword : AutofillHints.password
+          ],
           decoration: InputDecoration(
             labelText: l.password,
             suffixIcon: IconButton(
@@ -173,6 +179,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             child: Text(l.forgotPassword),
           ),
       ],
+      ),
     );
   }
 
@@ -194,6 +201,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           controller: _email,
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
+          autofillHints: const [AutofillHints.email, AutofillHints.username],
           decoration: InputDecoration(labelText: l.email),
         ),
         const SizedBox(height: 16),
@@ -240,6 +248,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           maxLength: 6,
+          autofillHints: const [AutofillHints.oneTimeCode],
           style: const TextStyle(fontSize: 24, letterSpacing: 8),
           decoration: const InputDecoration(counterText: '', hintText: '••••••'),
         ),
@@ -247,6 +256,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         TextField(
           controller: _password,
           obscureText: _obscure,
+          autofillHints: const [AutofillHints.newPassword],
           decoration: InputDecoration(
             labelText: l.newPassword,
             suffixIcon: IconButton(
@@ -299,6 +309,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           maxLength: 6,
+          autofillHints: const [AutofillHints.oneTimeCode],
           style: const TextStyle(fontSize: 28, letterSpacing: 10),
           decoration: InputDecoration(
             counterText: '',

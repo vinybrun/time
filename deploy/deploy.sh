@@ -21,6 +21,14 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SSH="ssh -i $KEY -o StrictHostKeyChecking=accept-new"
 RSYNC_E="ssh -i $KEY -o StrictHostKeyChecking=accept-new"
 
+# Gate: load the built web app as a brand-new (empty-state) user and abort if it
+# white-screens. The Dart-VM tests can't see web-only bugs (e.g. `1 << 32 == 0`
+# on JS), so this runs in a real browser. Set SKIP_WEB_SMOKE=1 to bypass.
+if [ "${SKIP_WEB_SMOKE:-0}" != "1" ]; then
+  echo "==> Web smoke test (empty-state render)"
+  "$ROOT/frontend/tool/web_smoke.sh"
+fi
+
 echo "==> Building Flutter web (API → https://$DOMAIN)"
 cd "$ROOT/frontend"
 flutter build web --release --dart-define=API_BASE_URL="https://$DOMAIN"

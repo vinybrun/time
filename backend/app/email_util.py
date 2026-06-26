@@ -40,7 +40,7 @@ background:#f7f6f1;padding:32px;color:#2b2b2b">
        border-radius:16px;padding:32px;text-align:center">
     <h1 style="font-size:20px;margin:0 0 8px">Time</h1>
     <p style="margin:0 0 20px;color:#6b6b6b">{greeting} confirm your email to start.</p>
-    <div style="font-size:34px;letter-spacing:8px;font-weight:700;
+    <div style="font-size:34px;letter-spacing:8px;font-weight:700;white-space:nowrap;
          background:#f0eee6;border-radius:12px;padding:16px 8px;margin:0 0 16px">{code}</div>
     <p style="margin:0;color:#8a8a8a;font-size:13px">
       Expires in {settings.code_ttl_minutes} minutes. If this wasn't you, ignore this email.</p>
@@ -66,7 +66,7 @@ background:#f7f6f1;padding:32px;color:#2b2b2b">
        border-radius:16px;padding:32px;text-align:center">
     <h1 style="font-size:20px;margin:0 0 8px">Time</h1>
     <p style="margin:0 0 20px;color:#6b6b6b">{greeting} use this code to reset your password.</p>
-    <div style="font-size:34px;letter-spacing:8px;font-weight:700;
+    <div style="font-size:34px;letter-spacing:8px;font-weight:700;white-space:nowrap;
          background:#f0eee6;border-radius:12px;padding:16px 8px;margin:0 0 16px">{code}</div>
     <p style="margin:0;color:#8a8a8a;font-size:13px">
       Expires in {settings.code_ttl_minutes} minutes. If this wasn't you, ignore this

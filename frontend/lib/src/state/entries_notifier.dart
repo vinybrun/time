@@ -30,7 +30,12 @@ class EntriesNotifier extends ChangeNotifier {
 
   static String _newId() {
     final r = Random();
-    return '${DateTime.now().microsecondsSinceEpoch}-${r.nextInt(1 << 32).toRadixString(16)}';
+    // NB: use a plain literal bound, not `1 << 32`. On the web, ints are JS
+    // numbers and bit-shifts are 32-bit, so `1 << 32` evaluates to 0 and
+    // `nextInt(0)` throws a RangeError — which crashed the whole app to a white
+    // screen for any freshly-registered user (no cached entries -> a new id is
+    // minted on first load). 0xFFFFFFFF is < 2^32 and valid on web and native.
+    return '${DateTime.now().microsecondsSinceEpoch}-${r.nextInt(0xFFFFFFFF).toRadixString(16)}';
   }
 
   List<TimeEntry> forDay(String day) {

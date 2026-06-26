@@ -36,13 +36,22 @@ void main() {
     app.main();
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
+    // tester.enterText does not reach the controller in the Flutter web
+    // integration-test harness (the browser owns the text input), so set the
+    // field's bound controller directly — the app reads controller.text. Works
+    // identically on web and native.
+    Future<void> typeInto(Finder field, String text) async {
+      tester.widget<TextField>(field).controller!.text = text;
+      await tester.pump();
+    }
+
     // --- Register ----------------------------------------------------------
     // Switch to "Create account" mode.
     await tester.tap(find.text('New here? Create an account'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField).at(0), 'Test Journey');
-    await tester.enterText(find.byType(TextField).at(1), email);
-    await tester.enterText(find.byType(TextField).at(2), password);
+    await typeInto(find.byType(TextField).at(0), 'Test Journey');
+    await typeInto(find.byType(TextField).at(1), email);
+    await typeInto(find.byType(TextField).at(2), password);
     await shot(tester, '01_register');
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -51,7 +60,7 @@ void main() {
     final codeResp = await http.get(
         Uri.parse('$kApiBaseUrl/api/v1/auth/dev-code?email=$email'));
     final code = (jsonDecode(codeResp.body) as Map)['code'] as String;
-    await tester.enterText(find.byType(TextField).first, code);
+    await typeInto(find.byType(TextField).first, code);
     await shot(tester, '02_verify');
     await tester.tap(find.text('Verify'));
     await tester.pumpAndSettle(const Duration(seconds: 2));

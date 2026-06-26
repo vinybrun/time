@@ -46,6 +46,15 @@ class TokenOut(BaseModel):
 
 # --- User -----------------------------------------------------------------
 
+class CategoryDef(BaseModel):
+    key: str = Field(pattern=r"^[a-z0-9_]{1,32}$")
+    label: str = Field(max_length=40)
+    color: int  # ARGB int
+    native: bool = False
+    enabled: bool = True
+    order: int = 0
+
+
 class UserOut(BaseModel):
     id: int
     email: str
@@ -68,15 +77,6 @@ class UserOut(BaseModel):
             except ValueError:
                 return None
         return v
-
-
-class CategoryDef(BaseModel):
-    key: str = Field(pattern=r"^[a-z0-9_]{1,32}$")
-    label: str = Field(max_length=40)
-    color: int  # ARGB int
-    native: bool = False
-    enabled: bool = True
-    order: int = 0
 
 
 class SettingsIn(BaseModel):
