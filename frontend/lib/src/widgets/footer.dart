@@ -21,8 +21,8 @@ class AppFooter extends StatelessWidget {
         children: [
           OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.ink,
-              side: const BorderSide(color: AppColors.line),
+              foregroundColor: context.c.ink,
+              side: BorderSide(color: context.c.line),
               minimumSize: const Size.fromHeight(48),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14)),
@@ -41,12 +41,12 @@ class AppFooter extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.android,
-                      size: 16, color: AppColors.accentStrong),
+                  Icon(Icons.android,
+                      size: 16, color: context.c.accentStrong),
                   const SizedBox(width: 6),
                   Text(l.downloadApk,
-                      style: const TextStyle(
-                          color: AppColors.accentStrong,
+                      style: TextStyle(
+                          color: context.c.accentStrong,
                           fontSize: 13,
                           fontWeight: FontWeight.w600)),
                 ],
@@ -61,11 +61,11 @@ class AppFooter extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(l.madeBy,
-                    style: const TextStyle(
-                        color: AppColors.inkSoft, fontSize: 13)),
+                    style: TextStyle(
+                        color: context.c.inkSoft, fontSize: 13)),
                 const SizedBox(width: 6),
-                const Icon(Icons.open_in_new,
-                    size: 13, color: AppColors.inkFaint),
+                Icon(Icons.open_in_new,
+                    size: 13, color: context.c.inkFaint),
               ],
             ),
           ),

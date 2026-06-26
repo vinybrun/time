@@ -142,6 +142,7 @@ class _DayDonutState extends State<DayDonut> {
             labelFor: (def) => def.displayLabel(l),
             textDirection: Directionality.of(context),
             showHandles: _interactive,
+            palette: context.c,
           ),
         );
         if (_interactive) {
@@ -169,6 +170,7 @@ class _DonutPainter extends CustomPainter {
     required this.centerSub,
     required this.labelFor,
     required this.textDirection,
+    required this.palette,
     this.showHandles = false,
   });
 
@@ -178,6 +180,7 @@ class _DonutPainter extends CustomPainter {
   final String centerSub;
   final String Function(CategoryDef) labelFor;
   final TextDirection textDirection;
+  final AppPalette palette;
   final bool showHandles;
 
   static const double _ringWidth = 24;
@@ -199,7 +202,7 @@ class _DonutPainter extends CustomPainter {
     final track = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = _ringWidth
-      ..color = AppColors.surfaceAlt;
+      ..color = palette.surfaceAlt;
     canvas.drawArc(ringRect, 0, full, false, track);
 
     if (totalMin <= 0) {
@@ -232,7 +235,7 @@ class _DonutPainter extends CustomPainter {
 
     // Division ticks reaching outward.
     final tickPaint = Paint()
-      ..color = AppColors.inkFaint
+      ..color = palette.inkFaint
       ..strokeWidth = 1.4;
     for (final b in boundaries) {
       final p1 = center + Offset(math.cos(b), math.sin(b)) * (radius + _ringWidth / 2 + _tickGap);
@@ -246,7 +249,7 @@ class _DonutPainter extends CustomPainter {
       final ring = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
-        ..color = AppColors.accentStrong;
+        ..color = palette.accentStrong;
       for (var i = 1; i < boundaries.length - 1; i++) {
         final c = center +
             Offset(math.cos(boundaries[i]), math.sin(boundaries[i])) * radius;
@@ -262,8 +265,8 @@ class _DonutPainter extends CustomPainter {
     final title = TextPainter(
       text: TextSpan(
         text: centerLabel,
-        style: const TextStyle(
-            fontSize: 26, fontWeight: FontWeight.w700, color: AppColors.ink),
+        style: TextStyle(
+            fontSize: 26, fontWeight: FontWeight.w700, color: palette.ink),
       ),
       textDirection: textDirection,
     )..layout();
@@ -272,7 +275,7 @@ class _DonutPainter extends CustomPainter {
     final sub = TextPainter(
       text: TextSpan(
         text: centerSub,
-        style: const TextStyle(fontSize: 12.5, color: AppColors.inkSoft),
+        style: TextStyle(fontSize: 12.5, color: palette.inkSoft),
       ),
       textDirection: textDirection,
     )..layout();
@@ -292,15 +295,15 @@ class _DonutPainter extends CustomPainter {
       text: TextSpan(children: [
         TextSpan(
             text: name,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 11,
                 height: 1.15,
                 fontWeight: FontWeight.w600,
-                color: AppColors.ink)),
+                color: palette.ink)),
         TextSpan(
             text: '\n$dur',
-            style: const TextStyle(
-                fontSize: 10, height: 1.15, color: AppColors.inkSoft)),
+            style: TextStyle(
+                fontSize: 10, height: 1.15, color: palette.inkSoft)),
       ]),
       textDirection: textDirection,
       textAlign: align,
@@ -319,6 +322,7 @@ class _DonutPainter extends CustomPainter {
       old.centerLabel != centerLabel ||
       old.centerSub != centerSub ||
       old.showHandles != showHandles ||
+      old.palette != palette ||
       !_sameSegments(old.segments, segments);
 
   bool _sameSegments(List<DonutSegment> a, List<DonutSegment> b) {

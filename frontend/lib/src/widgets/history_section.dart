@@ -78,7 +78,7 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
             const SizedBox(height: 4),
             Text(l.entryOverlapNote,
                 style:
-                    const TextStyle(fontSize: 12, color: AppColors.inkFaint)),
+                    TextStyle(fontSize: 12, color: context.c.inkFaint)),
             const SizedBox(height: 14),
             Row(
               children: [
@@ -135,7 +135,7 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
                 IconButton.filled(
                   key: const ValueKey('history_add'),
                   style: IconButton.styleFrom(
-                    backgroundColor: AppColors.accentStrong,
+                    backgroundColor: context.c.accentStrong,
                     minimumSize: const Size(44, 44),
                   ),
                   onPressed: () => _add(cats),
@@ -151,7 +151,7 @@ class _HistorySectionState extends ConsumerState<HistorySection> {
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Center(
                   child: Text(l.noEntries,
-                      style: const TextStyle(color: AppColors.inkFaint)),
+                      style: TextStyle(color: context.c.inkFaint)),
                 ),
               )
             else
@@ -177,16 +177,16 @@ class _Field extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.surfaceAlt,
+          color: context.c.surfaceAlt,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.line),
+          border: Border.all(color: context.c.line),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(label,
                 style:
-                    const TextStyle(fontSize: 9.5, color: AppColors.inkFaint)),
+                    TextStyle(fontSize: 9.5, color: context.c.inkFaint)),
             const SizedBox(height: 2),
             child,
           ],
@@ -257,9 +257,9 @@ class _EntryRow extends ConsumerWidget {
             ),
           ),
           _TimeCell(label: formatMinutes(entry.startMin), onTap: editStart),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 2),
-            child: Text('–', style: TextStyle(color: AppColors.inkFaint)),
+            child: Text('–', style: TextStyle(color: context.c.inkFaint)),
           ),
           _TimeCell(
             label: endLabel,
@@ -269,7 +269,7 @@ class _EntryRow extends ConsumerWidget {
           IconButton(
             visualDensity: VisualDensity.compact,
             iconSize: 18,
-            color: AppColors.inkFaint,
+            color: context.c.inkFaint,
             onPressed: () => notifier.deleteEntry(entry.clientId),
             icon: const Icon(Icons.close),
             tooltip: l.delete,
@@ -298,7 +298,7 @@ class _TimeCell extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 13.5,
-            color: muted ? AppColors.accentStrong : AppColors.ink,
+            color: muted ? context.c.accentStrong : context.c.ink,
             fontWeight: muted ? FontWeight.w600 : FontWeight.w500,
           ),
         ),

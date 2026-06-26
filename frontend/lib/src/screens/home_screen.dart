@@ -117,7 +117,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             SliverAppBar(
               pinned: true,
               automaticallyImplyLeading: false,
-              backgroundColor: AppColors.background,
+              backgroundColor: context.c.background,
               titleSpacing: 0,
               title: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -185,8 +185,8 @@ class _SectionTitle extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.ink),
+        style: TextStyle(
+            fontSize: 16, fontWeight: FontWeight.w700, color: context.c.ink),
       ),
     );
   }

@@ -81,5 +81,11 @@
   "deleteAccountWarn": "Esto elimina permanentemente tu cuenta y todos tus datos de tiempo. No se puede deshacer.",
   "deleteForever": "Eliminar para siempre",
   "resetToDefaults": "Restablecer valores",
-  "manageCategoriesHint": "Renombra, recolorea, oculta o añade tus propias áreas."
+  "manageCategoriesHint": "Renombra, recolorea, oculta o añade tus propias áreas.",
+  "appearance": "Apariencia",
+  "theme": "Tema",
+  "themeOffWhite": "Hueso",
+  "themeDark": "Oscuro",
+  "themeCircadian": "Circadiano",
+  "themeCircadianHint": "Sigue el cielo a lo largo del día"
 }

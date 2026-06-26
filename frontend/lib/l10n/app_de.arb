@@ -81,5 +81,11 @@
   "deleteAccountWarn": "Dies löscht dein Konto und alle deine Zeitdaten dauerhaft. Kann nicht rückgängig gemacht werden.",
   "deleteForever": "Endgültig löschen",
   "resetToDefaults": "Auf Standard zurücksetzen",
-  "manageCategoriesHint": "Benenne um, färbe um, blende aus oder füge eigene Bereiche hinzu."
+  "manageCategoriesHint": "Benenne um, färbe um, blende aus oder füge eigene Bereiche hinzu.",
+  "appearance": "Darstellung",
+  "theme": "Design",
+  "themeOffWhite": "Cremeweiß",
+  "themeDark": "Dunkel",
+  "themeCircadian": "Zirkadian",
+  "themeCircadianHint": "Folgt dem Himmel im Tagesverlauf"
 }

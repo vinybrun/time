@@ -63,7 +63,7 @@ class _FocusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: active ? color : AppColors.surface,
+      color: active ? color : context.c.surface,
       borderRadius: BorderRadius.circular(22),
       child: InkWell(
         borderRadius: BorderRadius.circular(22),
@@ -74,7 +74,7 @@ class _FocusChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: active ? color : AppColors.line,
+              color: active ? color : context.c.line,
               width: active ? 2 : 1,
             ),
           ),
@@ -102,7 +102,7 @@ class _FocusChip extends StatelessWidget {
                       ? (color.computeLuminance() > 0.6
                           ? const Color(0xFF3A372F)
                           : Colors.white)
-                      : AppColors.ink,
+                      : context.c.ink,
                 ),
               ),
             ],

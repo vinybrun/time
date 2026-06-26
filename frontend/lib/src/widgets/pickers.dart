@@ -4,62 +4,55 @@ import '../../l10n/app_localizations.dart';
 import '../models/category.dart';
 import '../theme.dart';
 
-/// Modal category picker — works the same on mobile and web (a dropdown is
-/// awkward on touch, a sheet is one tap and fully legible). Returns the key.
+/// Centered category picker dialog — opens in the middle of the screen like the
+/// time picker. Returns the chosen key (or null if dismissed).
 Future<String?> pickCategory(
     BuildContext context, List<CategoryDef> categories, String? currentKey) {
   final l = AppL10n.of(context);
-  return showModalBottomSheet<String>(
+  return showDialog<String>(
     context: context,
-    backgroundColor: AppColors.surface,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
     builder: (context) {
-      return SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.line,
-                borderRadius: BorderRadius.circular(2),
+      final c = context.c;
+      return Dialog(
+        backgroundColor: c.surface,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 360),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 10),
+                child: Text(l.category,
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.w700)),
               ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Text(l.category,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600)),
-            ),
-            Flexible(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  for (final cat in categories)
-                    ListTile(
-                      leading: Container(
-                        width: 18,
-                        height: 18,
-                        decoration: BoxDecoration(
-                            color: cat.color, shape: BoxShape.circle),
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final cat in categories)
+                      ListTile(
+                        leading: Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                              color: cat.color, shape: BoxShape.circle),
+                        ),
+                        title: Text(cat.displayLabel(l)),
+                        trailing: currentKey == cat.key
+                            ? Icon(Icons.check, color: c.accentStrong)
+                            : null,
+                        onTap: () => Navigator.pop(context, cat.key),
                       ),
-                      title: Text(cat.displayLabel(l)),
-                      trailing: currentKey == cat.key
-                          ? const Icon(Icons.check,
-                              color: AppColors.accentStrong)
-                          : null,
-                      onTap: () => Navigator.pop(context, cat.key),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-          ],
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       );
     },

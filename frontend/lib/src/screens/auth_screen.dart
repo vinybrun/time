@@ -84,12 +84,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: context.c.surface,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.accentStrong, width: 3),
+              border: Border.all(color: context.c.accentStrong, width: 3),
             ),
-            child: const Center(
-              child: Icon(Icons.schedule, size: 30, color: AppColors.accentStrong),
+            child: Center(
+              child: Icon(Icons.schedule, size: 30, color: context.c.accentStrong),
             ),
           ),
           const SizedBox(height: 16),
@@ -98,7 +98,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           const SizedBox(height: 6),
           Text(l.welcomeTagline,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.inkSoft)),
+              style: TextStyle(color: context.c.inkSoft)),
           const SizedBox(height: 28),
         ],
       );
@@ -195,7 +195,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         const SizedBox(height: 8),
         Text(l.resetEmailHint,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.inkSoft)),
+            style: TextStyle(color: context.c.inkSoft)),
         const SizedBox(height: 20),
         TextField(
           controller: _email,
@@ -241,7 +241,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         const SizedBox(height: 8),
         Text(l.resetCodeHint(_email.text),
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.inkSoft)),
+            style: TextStyle(color: context.c.inkSoft)),
         const SizedBox(height: 20),
         TextField(
           controller: _code,
@@ -302,7 +302,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         const SizedBox(height: 8),
         Text(l.verifyHint(email),
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.inkSoft)),
+            style: TextStyle(color: context.c.inkSoft)),
         const SizedBox(height: 20),
         TextField(
           controller: _code,

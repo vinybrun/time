@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/api_client.dart';
 import '../data/local_store.dart';
+import '../theme.dart';
 import '../util/time_utils.dart';
 import 'auth_notifier.dart';
 import 'categories_notifier.dart';
@@ -43,6 +44,63 @@ final categoriesProvider = ChangeNotifierProvider<CategoriesNotifier>((ref) {
 
 /// Currently selected day (YYYY-MM-DD). Defaults to today.
 final selectedDayProvider = StateProvider<String>((ref) => today());
+
+// --- Theme -----------------------------------------------------------------
+
+enum ThemeChoice { offWhite, dark, circadian }
+
+ThemeChoice _themeFromCode(String? code) => switch (code) {
+      'dark' => ThemeChoice.dark,
+      'circadian' => ThemeChoice.circadian,
+      _ => ThemeChoice.offWhite,
+    };
+
+String themeCode(ThemeChoice c) => switch (c) {
+      ThemeChoice.dark => 'dark',
+      ThemeChoice.circadian => 'circadian',
+      ThemeChoice.offWhite => 'offwhite',
+    };
+
+/// The chosen theme, persisted locally (a device preference, not synced).
+final themeChoiceProvider =
+    StateNotifierProvider<ThemeChoiceNotifier, ThemeChoice>((ref) {
+  return ThemeChoiceNotifier(ref.watch(localStoreProvider));
+});
+
+class ThemeChoiceNotifier extends StateNotifier<ThemeChoice> {
+  ThemeChoiceNotifier(this._store) : super(_themeFromCode(_store.themeChoice));
+  final LocalStore _store;
+
+  Future<void> set(ThemeChoice choice) async {
+    await _store.setThemeChoice(themeCode(choice));
+    state = choice;
+  }
+}
+
+/// Ticks every minute (only while listened) so the circadian palette drifts
+/// with the local clock. Kept separate from [nowMinProvider] so it doesn't pull
+/// in the entries graph before the user is even authenticated.
+final clockProvider = StreamProvider.autoDispose<DateTime>((ref) async* {
+  yield DateTime.now();
+  while (true) {
+    await Future<void>.delayed(const Duration(minutes: 1));
+    yield DateTime.now();
+  }
+});
+
+/// The active palette for the chosen theme. For circadian it depends on the
+/// local clock and so changes through the day.
+final appPaletteProvider = Provider<AppPalette>((ref) {
+  switch (ref.watch(themeChoiceProvider)) {
+    case ThemeChoice.offWhite:
+      return kOffWhitePalette;
+    case ThemeChoice.dark:
+      return kDarkPalette;
+    case ThemeChoice.circadian:
+      final now = ref.watch(clockProvider).value ?? DateTime.now();
+      return circadianPaletteAt(now);
+  }
+});
 
 /// Locale override: null = follow system. Persisted in LocalStore.
 final localeOverrideProvider =

@@ -26,10 +26,14 @@ class TimeApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final override = ref.watch(localeOverrideProvider);
+    final palette = ref.watch(appPaletteProvider);
     return MaterialApp(
       title: 'Time',
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(),
+      theme: buildTheme(palette),
+      // Cross-fade theme changes so the circadian drift is gentle, not abrupt.
+      themeAnimationDuration: const Duration(milliseconds: 900),
+      themeAnimationCurve: Curves.easeInOut,
       locale: override,
       localizationsDelegates: AppL10n.localizationsDelegates,
       supportedLocales: AppL10n.supportedLocales,

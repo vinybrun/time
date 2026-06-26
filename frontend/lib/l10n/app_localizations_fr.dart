@@ -268,4 +268,22 @@ class AppL10nFr extends AppL10n {
   @override
   String get manageCategoriesHint =>
       'Renomme, recolorie, masque ou ajoute tes propres domaines.';
+
+  @override
+  String get appearance => 'Apparence';
+
+  @override
+  String get theme => 'Thème';
+
+  @override
+  String get themeOffWhite => 'Blanc cassé';
+
+  @override
+  String get themeDark => 'Sombre';
+
+  @override
+  String get themeCircadian => 'Circadien';
+
+  @override
+  String get themeCircadianHint => 'Suit le ciel au fil de la journée';
 }

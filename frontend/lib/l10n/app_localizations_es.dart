@@ -265,4 +265,22 @@ class AppL10nEs extends AppL10n {
   @override
   String get manageCategoriesHint =>
       'Renombra, recolorea, oculta o añade tus propias áreas.';
+
+  @override
+  String get appearance => 'Apariencia';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeOffWhite => 'Hueso';
+
+  @override
+  String get themeDark => 'Oscuro';
+
+  @override
+  String get themeCircadian => 'Circadiano';
+
+  @override
+  String get themeCircadianHint => 'Sigue el cielo a lo largo del día';
 }

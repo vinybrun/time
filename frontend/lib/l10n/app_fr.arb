@@ -81,5 +81,11 @@
   "deleteAccountWarn": "Ceci supprime définitivement ton compte et toutes tes données de temps. Action irréversible.",
   "deleteForever": "Supprimer définitivement",
   "resetToDefaults": "Réinitialiser",
-  "manageCategoriesHint": "Renomme, recolorie, masque ou ajoute tes propres domaines."
+  "manageCategoriesHint": "Renomme, recolorie, masque ou ajoute tes propres domaines.",
+  "appearance": "Apparence",
+  "theme": "Thème",
+  "themeOffWhite": "Blanc cassé",
+  "themeDark": "Sombre",
+  "themeCircadian": "Circadien",
+  "themeCircadianHint": "Suit le ciel au fil de la journée"
 }

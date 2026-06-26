@@ -120,7 +120,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Text(l.cancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
+            style: FilledButton.styleFrom(backgroundColor: context.c.danger),
             onPressed: () => Navigator.pop(context, true),
             child: Text(l.deleteForever),
           ),
@@ -179,7 +179,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(user.email,
-                          style: const TextStyle(color: AppColors.inkSoft)),
+                          style: TextStyle(color: context.c.inkSoft)),
                     ),
                   TextField(
                     controller: _name,
@@ -221,6 +221,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     child: Text(l.save),
                   ),
                   const SizedBox(height: 28),
+                  _GroupTitle(l.appearance),
+                  const _ThemeSelector(),
+                  const SizedBox(height: 28),
                   _GroupTitle(l.changePassword),
                   TextField(
                     controller: _currentPw,
@@ -238,8 +241,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      side: const BorderSide(color: AppColors.line),
-                      foregroundColor: AppColors.ink,
+                      side: BorderSide(color: context.c.line),
+                      foregroundColor: context.c.ink,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
@@ -251,8 +254,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      side: const BorderSide(color: AppColors.line),
-                      foregroundColor: AppColors.ink,
+                      side: BorderSide(color: context.c.line),
+                      foregroundColor: context.c.ink,
                       alignment: Alignment.centerLeft,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
@@ -269,8 +272,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      side: const BorderSide(color: AppColors.line),
-                      foregroundColor: AppColors.ink,
+                      side: BorderSide(color: context.c.line),
+                      foregroundColor: context.c.ink,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
@@ -282,8 +285,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      side: const BorderSide(color: AppColors.danger),
-                      foregroundColor: AppColors.danger,
+                      side: BorderSide(color: context.c.danger),
+                      foregroundColor: context.c.danger,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
@@ -294,7 +297,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   const SizedBox(height: 28),
                   TextButton.icon(
                     style: TextButton.styleFrom(
-                        foregroundColor: AppColors.inkSoft,
+                        foregroundColor: context.c.inkSoft,
                         minimumSize: const Size.fromHeight(48)),
                     onPressed: () async {
                       await ref.read(authProvider).logout();
@@ -313,6 +316,84 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 }
 
+class _ThemeSelector extends ConsumerWidget {
+  const _ThemeSelector();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppL10n.of(context);
+    final current = ref.watch(themeChoiceProvider);
+    final c = context.c;
+
+    Widget tile(ThemeChoice choice, String label, String? hint,
+        List<Color> preview) {
+      final selected = current == choice;
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () => ref.read(themeChoiceProvider.notifier).set(choice),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: selected ? c.accentStrong : c.line,
+                width: selected ? 2 : 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(colors: preview),
+                    border: Border.all(color: c.line),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, color: c.ink)),
+                      if (hint != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(hint,
+                              style:
+                                  TextStyle(fontSize: 12, color: c.inkSoft)),
+                        ),
+                    ],
+                  ),
+                ),
+                if (selected)
+                  Icon(Icons.check_circle, color: c.accentStrong, size: 22),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        tile(ThemeChoice.offWhite, l.themeOffWhite, null,
+            [kOffWhitePalette.background, kOffWhitePalette.accent]),
+        tile(ThemeChoice.dark, l.themeDark, null,
+            [kDarkPalette.surface, kDarkPalette.surfaceAlt]),
+        tile(ThemeChoice.circadian, l.themeCircadian, l.themeCircadianHint,
+            const [Color(0xFF12141C), Color(0xFF4F90B2), Color(0xFFD98A5A)]),
+      ],
+    );
+  }
+}
+
 class _GroupTitle extends StatelessWidget {
   const _GroupTitle(this.text);
   final String text;
@@ -322,11 +403,11 @@ class _GroupTitle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(text,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.6,
-              color: AppColors.inkSoft)),
+              color: context.c.inkSoft)),
     );
   }
 }

@@ -266,4 +266,22 @@ class AppL10nPt extends AppL10n {
   @override
   String get manageCategoriesHint =>
       'Renomeie, recolora, oculte ou adicione suas próprias áreas.';
+
+  @override
+  String get appearance => 'Aparência';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeOffWhite => 'Bege claro';
+
+  @override
+  String get themeDark => 'Escuro';
+
+  @override
+  String get themeCircadian => 'Circadiano';
+
+  @override
+  String get themeCircadianHint => 'Acompanha o céu ao longo do seu dia';
 }

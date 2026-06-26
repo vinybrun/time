@@ -594,6 +594,42 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Rename, recolor, hide, or add your own areas.'**
   String get manageCategoriesHint;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @themeOffWhite.
+  ///
+  /// In en, this message translates to:
+  /// **'Off-white'**
+  String get themeOffWhite;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeCircadian.
+  ///
+  /// In en, this message translates to:
+  /// **'Circadian'**
+  String get themeCircadian;
+
+  /// No description provided for @themeCircadianHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows the sky through your day'**
+  String get themeCircadianHint;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

@@ -269,4 +269,22 @@ class AppL10nDe extends AppL10n {
   @override
   String get manageCategoriesHint =>
       'Benenne um, färbe um, blende aus oder füge eigene Bereiche hinzu.';
+
+  @override
+  String get appearance => 'Darstellung';
+
+  @override
+  String get theme => 'Design';
+
+  @override
+  String get themeOffWhite => 'Cremeweiß';
+
+  @override
+  String get themeDark => 'Dunkel';
+
+  @override
+  String get themeCircadian => 'Zirkadian';
+
+  @override
+  String get themeCircadianHint => 'Folgt dem Himmel im Tagesverlauf';
 }

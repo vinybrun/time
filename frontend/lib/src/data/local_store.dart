@@ -18,6 +18,7 @@ class LocalStore {
   static const _kPendingDeletes = 'pending_deletes';
   static const _kLocaleOverride = 'locale_override';
   static const _kCategories = 'categories';
+  static const _kThemeChoice = 'theme_choice';
 
   static Future<LocalStore> create() async =>
       LocalStore(await SharedPreferences.getInstance());
@@ -104,6 +105,12 @@ class LocalStore {
   Future<void> setCategories(List<CategoryDef> cats) async {
     await _prefs.setString(
         _kCategories, jsonEncode(cats.map((c) => c.toJson()).toList()));
+  }
+
+  // Theme choice ('offwhite' | 'dark' | 'circadian'); null = default.
+  String? get themeChoice => _prefs.getString(_kThemeChoice);
+  Future<void> setThemeChoice(String code) async {
+    await _prefs.setString(_kThemeChoice, code);
   }
 
   Future<void> clearSession() async {

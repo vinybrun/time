@@ -105,5 +105,11 @@
   "deleteAccountWarn": "This permanently deletes your account and all your time data. This cannot be undone.",
   "deleteForever": "Delete forever",
   "resetToDefaults": "Reset to defaults",
-  "manageCategoriesHint": "Rename, recolor, hide, or add your own areas."
+  "manageCategoriesHint": "Rename, recolor, hide, or add your own areas.",
+  "appearance": "Appearance",
+  "theme": "Theme",
+  "themeOffWhite": "Off-white",
+  "themeDark": "Dark",
+  "themeCircadian": "Circadian",
+  "themeCircadianHint": "Follows the sky through your day"
 }

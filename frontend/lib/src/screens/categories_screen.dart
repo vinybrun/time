@@ -39,8 +39,8 @@ class CategoriesScreen extends ConsumerWidget {
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      side: const BorderSide(color: AppColors.line),
-                      foregroundColor: AppColors.accentStrong,
+                      side: BorderSide(color: context.c.line),
+                      foregroundColor: context.c.accentStrong,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
@@ -116,9 +116,9 @@ class _CategoryTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.c.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.line),
+        border: Border.all(color: context.c.line),
       ),
       child: Row(
         children: [
@@ -134,7 +134,7 @@ class _CategoryTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: def.color,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.line),
+                  border: Border.all(color: context.c.line),
                 ),
               ),
             ),
@@ -149,7 +149,7 @@ class _CategoryTile extends StatelessWidget {
                   def.displayLabel(l),
                   style: TextStyle(
                     fontSize: 15,
-                    color: def.enabled ? AppColors.ink : AppColors.inkFaint,
+                    color: def.enabled ? context.c.ink : context.c.inkFaint,
                   ),
                 ),
               ),
@@ -158,13 +158,13 @@ class _CategoryTile extends StatelessWidget {
           if (!def.native)
             IconButton(
               icon: const Icon(Icons.delete_outline, size: 20),
-              color: AppColors.inkFaint,
+              color: context.c.inkFaint,
               onPressed: () => notifier.remove(def.key),
               tooltip: l.delete,
             ),
           Switch(
             value: def.enabled,
-            activeTrackColor: AppColors.accentStrong,
+            activeTrackColor: context.c.accentStrong,
             onChanged: (v) => notifier.update(def.key, enabled: v),
           ),
         ],
@@ -242,7 +242,7 @@ class _PaletteRow extends StatelessWidget {
                 color: Color(c),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: selected == c ? AppColors.ink : AppColors.line,
+                  color: selected == c ? context.c.ink : context.c.line,
                   width: selected == c ? 3 : 1,
                 ),
               ),

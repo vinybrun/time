@@ -262,4 +262,22 @@ class AppL10nEn extends AppL10n {
   @override
   String get manageCategoriesHint =>
       'Rename, recolor, hide, or add your own areas.';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get themeOffWhite => 'Off-white';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeCircadian => 'Circadian';
+
+  @override
+  String get themeCircadianHint => 'Follows the sky through your day';
 }
