@@ -5,6 +5,8 @@
 .env
 *.env.local
 backend/.env
+# Real deploy target (host/key/dir) — never committed; passed via env
+deploy/deploy.env
 
 # Python
 backend/.venv/
